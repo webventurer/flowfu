@@ -83,7 +83,7 @@ This ensures each commit represents a working state of the codebase.
 
 ## The atomicity balance
 
-Atomicity has two failure modes, not one:
+Atomicity has two failure modes, not one. Use [clarity through opposites](../../../docs/research/ai-patterns/clarity-through-opposites.md) to find the sweet spot:
 
 **Over-atomising** (too many commits):
 - Splitting a one-line CSS fix and a related prop addition into separate commits

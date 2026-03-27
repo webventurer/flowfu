@@ -28,7 +28,7 @@ See [atomic git commits](../patterns/git/atomic-git-commits.md) for the full com
 
 ### Functions and methods
 
-A function should do one thing. This is the single responsibility principle applied at the function level. If a function calculates a total and also sends an email, it is doing two things. The email and the calculation are independently meaningful — they can and should be separated.
+A function should do one thing. This is the [single responsibility principle](../principles/single-responsibility-principle.md) applied at the function level. If a function calculates a total and also sends an email, it is doing two things. The email and the calculation are independently meaningful — they can and should be separated.
 
 ### Classes
 
@@ -99,7 +99,7 @@ Combining things because it is easier to ship them together. Easier now, harder 
 
 ## The relationship to SRP
 
-Atomicity and the single responsibility principle are expressions of the same underlying idea at different scales:
+Atomicity and the [single responsibility principle](../principles/single-responsibility-principle.md) are expressions of the same underlying idea at different scales:
 
 - **SRP** asks: does this code entity have one reason to change?
 - **Atomicity** asks: does this unit of work represent one logical change?
