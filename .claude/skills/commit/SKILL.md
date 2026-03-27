@@ -25,7 +25,7 @@ description: Create atomic git commits using a four-pass methodology — content
 
 ## When NOT to use
 
-- User is exploring changes or running `git diff` (use [git-ops](../git-ops/SKILL.md) instead)
+- User is exploring changes or running `git diff`
 - No changes exist to commit
 - User has not explicitly asked for a commit
 
@@ -83,7 +83,7 @@ This ensures each commit represents a working state of the codebase.
 
 ## The atomicity balance
 
-Atomicity has two failure modes, not one. Use [clarity through opposites](../../../docs/research/ai-patterns/clarity-through-opposites.md) to find the sweet spot:
+Atomicity has two failure modes, not one:
 
 **Over-atomising** (too many commits):
 - Splitting a one-line CSS fix and a related prop addition into separate commits
@@ -210,14 +210,6 @@ Pre-commit hooks can accidentally cause you to commit multiple unrelated files t
 ## Execution
 
 <mark>**Read and follow every step in [WORKFLOW.md](WORKFLOW.md).**</mark>
-
----
-
-## Cross-references
-
-| Skill | Relationship |
-|:------|:-------------|
-| [git-ops](../git-ops/SKILL.md) | General git reference — staging, branching, viewing changes |
 
 ---
 
