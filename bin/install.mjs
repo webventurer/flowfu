@@ -72,6 +72,7 @@ function dedupeHooks(existing, incoming) {
 function copyFiles() {
   const dirs = [
     ".claude/skills/commit",
+    ".claude/skills/craft",
     ".claude/commands/linear",
     ".claude/hooks",
     ".claude/docs/patterns/git",
