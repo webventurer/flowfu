@@ -36,16 +36,16 @@ Both skills are installed as plain markdown files in your `.claude/` directory �
 
 ### /commit — atomic git commits
 
-A four-pass methodology that separates content decisions from formatting standards:
+AI agents make specific atomicity mistakes — grouping changes by session, by shared prefix, or by proximity rather than by purpose. The `/commit` skill catches these through a four-pass methodology that separates content decisions from formatting standards. See the full [atomic commits methodology](.claude/docs/patterns/git/atomic-git-commits.md).
 
 1. **Pre-flight** — fix formatting, identify atomic changes
 2. **Content** — stage selectively, verify one logical change
 3. **Standards** — verify message format against checklists
 4. **Post-commit** — verify atomicity after committing
 
-### /linear — [Linear workflow](.claude/commands/linear/reference/workflow.md)
+### /linear — Linear workflow
 
-Five commands that cover the full development cycle.
+Five commands that cover the full development cycle, from planning through to merge — all without leaving Claude Code. See the [full workflow reference](.claude/commands/linear/reference/workflow.md) for detailed usage and examples.
 
 | Command | What it does |
 |:--------|:-------------|
