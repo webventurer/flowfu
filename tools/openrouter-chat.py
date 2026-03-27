@@ -51,9 +51,13 @@ def send(prompt: str, model: str, system: str = "", effort: str = "") -> dict:
 
 @click.command()
 @click.argument("prompt")
-@click.option("-m", "--model", default=DEFAULT_MODEL, help=f"Model ID. Default: {DEFAULT_MODEL}.")
+@click.option(
+    "-m", "--model", default=DEFAULT_MODEL, help=f"Model ID. Default: {DEFAULT_MODEL}."
+)
 @click.option("-s", "--system", default="", help="System message.")
-@click.option("-r", "--reasoning-effort", default="", help="Reasoning effort: low, medium, high.")
+@click.option(
+    "-r", "--reasoning-effort", default="", help="Reasoning effort: low, medium, high."
+)
 def main(prompt: str, model: str, system: str, reasoning_effort: str):
     check_env()
     data = send(prompt, model, system, reasoning_effort)
