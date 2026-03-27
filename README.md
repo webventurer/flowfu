@@ -1,5 +1,7 @@
 # codefu-core
 
+![CODEFU!](designs/codefu-poster.jpg)
+
 Claude Code skills for **atomic commits** and **Linear workflow**.
 
 Ready to get started? See the **[install guide](INSTALL.md)** for setup instructions, requirements, and API keys.
