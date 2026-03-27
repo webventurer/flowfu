@@ -3,7 +3,7 @@
 
 Usage:
     python tools/openrouter-chat.py "prompt"
-    python tools/openrouter-chat.py "prompt" -m openai/gpt-4.1
+    python tools/openrouter-chat.py "prompt" -m openai/gpt-5.4-pro
     python tools/openrouter-chat.py "prompt" -s "You are a reviewer."
 """
 
@@ -17,7 +17,7 @@ import httpx
 dotenv.load_dotenv(Path.home() / ".env")
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
-DEFAULT_MODEL = "openai/gpt-4.1"
+DEFAULT_MODEL = "openai/gpt-5.4-pro"
 
 
 def check_env():
