@@ -1,6 +1,6 @@
 # codefu-core
 
-Claude Code skills for **atomic commits** and **Linear workflow**.
+Claude Code skills that turn vibe coding into agentic engineering — **atomic commits** that make every change traceable and reversible, and a **Linear workflow** that ties every change to a real objective.
 
 Ready to get started? See the **[install guide](INSTALL.md)** for setup instructions, requirements, and API keys.
 
@@ -26,7 +26,9 @@ This keeps the agent *grounded in real project priorities* rather than working i
 
 > "When faced with two or more alternatives that deliver roughly the same value, **take the path that makes future change easier**." — David Thomas & Andrew Hunt, *The Pragmatic Programmer*
 
-Together, these skills turn Claude Code from a capable code generator into a **disciplined engineering partner**. Atomic commits make every change traceable and reversible. Linear integration ties every change to a real objective. Both skills are installed as plain markdown files in your `.claude/` directory — no runtime dependencies, no lock-in, and fully customisable to your team's standards.
+Vibe coding produces code. Agentic engineering produces **a traceable, reversible, purposeful history of decisions**. Together, `/commit` and `/linear` close that gap — every change is atomic, every change is tied to an objective, and the agent operates with the discipline of a senior engineer rather than the enthusiasm of an intern with root access.
+
+Both skills are installed as plain markdown files in your `.claude/` directory — no runtime dependencies, no lock-in, and fully customisable to your team's standards.
 
 <mark>**The approach is designed to compound: as AI models improve, the structured documentation gets more from them, not less.**</mark>
 
