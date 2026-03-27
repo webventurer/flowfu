@@ -16,6 +16,9 @@ The `/commit` skill encodes a **four-pass methodology** that separates content d
 
 ## Linear integration
 
+![Linear board view](designs/linear-board.jpg)
+*Issues flow from Backlog through Doing to Done, driven entirely by `/linear` commands.*
+
 <mark>The `/linear` commands connect your development workflow directly to [Linear](https://linear.app), the issue tracking and project management tool built for modern software teams.</mark>
 
 Rather than context-switching between your editor and a browser, you can plan work, create issues, implement features, handle PR feedback, and close issues — all from within Claude Code. The five commands cover the **full development lifecycle**: from researching a problem and writing a well-structured issue, through to merging an approved pull request and marking it done.
@@ -55,6 +58,8 @@ Five commands that cover the full development cycle, from planning through to me
 | `/linear:finish` | Merge approved PR and close the issue |
 | `/linear:next-steps` | Review priorities and recommend next work |
 
+![Linear issue detail](designs/linear-card.jpg)
+*A well-structured issue created by `/linear:plan-work` — clear Problem, Goal, and Scope sections that give the agent everything it needs to start work.*
 
 ## License
 
