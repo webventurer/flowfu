@@ -20,6 +20,8 @@ This keeps the agent *grounded in real project priorities* rather than working i
 
 ## Better together
 
+> "When faced with two or more alternatives that deliver roughly the same value, **take the path that makes future change easier**." — David Thomas & Andrew Hunt, *The Pragmatic Programmer*
+
 Together, these skills turn Claude Code from a capable code generator into a **disciplined engineering partner**. Atomic commits make every change traceable and reversible. Linear integration ties every change to a real objective. Both skills are installed as plain markdown files in your `.claude/` directory — no runtime dependencies, no lock-in, and fully customisable to your team's standards.
 
 <mark>**The approach is designed to compound: as AI models improve, the structured documentation gets more from them, not less.**</mark>
