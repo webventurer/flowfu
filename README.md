@@ -61,6 +61,19 @@ Five commands that cover the full development cycle, from planning through to me
 ![Linear issue detail](designs/linear-card.jpg)
 *A well-structured issue created by `/linear:plan-work` — clear Problem, Goal, and Scope sections that give the agent everything it needs to start work.*
 
+## App starters
+
+codefu-core gives you the engineering workflow. App starters give you the project scaffold. Each starter is an opinionated template that gets you from zero to a working app in one command — with codefu-core's skills already wired in.
+
+### [app-starter](https://github.com/webventurer/app-starter)
+
+A modern full-stack web app starter — React + TypeScript + Vite on the frontend, Hono + Neon + Clerk + Drizzle on the backend. Every layer is independently replaceable — swap one piece without rewiring the rest. Includes shadcn/ui for components, Biome for formatting, and reference docs that explain every technology choice.
+
+```bash
+gh repo clone webventurer/app-starter
+./app-starter/scripts/create.sh my-app
+```
+
 ## License
 
 [MIT](LICENSE)
