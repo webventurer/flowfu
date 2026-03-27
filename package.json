@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Claude Code skills for atomic commits and Linear workflow",
   "scripts": {
+    "dev": "vitepress dev docs",
+    "build:docs": "vitepress build docs",
+    "preview:docs": "vitepress preview docs",
     "format": "biome format --write .",
     "lint": "biome lint ."
   },
@@ -22,7 +25,8 @@
     "workflow"
   ],
   "devDependencies": {
-    "@biomejs/biome": "^2.4.6"
+    "@biomejs/biome": "^2.4.6",
+    "vitepress": "^1.6.4"
   },
   "license": "MIT",
   "repository": {
