@@ -567,4 +567,4 @@ git commit -m "feat: Add user validation with email and phone checks"
 
 ## Appendix: Chris Beams style
 
-See [Chris Beams commit style](../../../.claude/skills/commit/references/chris-beams-commit-style.md) — the 7 rules and example template that our commit format is built on.
+See [Chris Beams commit style](../../../../.claude/skills/commit/references/chris-beams-commit-style.md) — the 7 rules and example template that our commit format is built on.

@@ -6,7 +6,7 @@ Ready to get started? See the **[install guide](INSTALL.md)** for setup instruct
 
 ![CODEFU!](designs/codefu-poster.jpg)
 
-## Why atomic commits matter
+## Why [atomic commits](.claude/docs/patterns/git/atomic-git-commits.md) matter
 
 <mark>**When AI agents write code, the quality of git history becomes a make-or-break concern.**</mark>
 
@@ -41,9 +41,9 @@ A four-pass methodology that separates content decisions from formatting standar
 3. **Standards** — verify message format against checklists
 4. **Post-commit** — verify atomicity after committing
 
-### /linear — Linear workflow
+### /linear — [Linear workflow](.claude/commands/linear/reference/workflow.md)
 
-Five commands that cover the full development cycle. See the [full workflow reference](.claude/commands/linear/reference/workflow.md) for detailed usage and examples.
+Five commands that cover the full development cycle.
 
 | Command | What it does |
 |:--------|:-------------|
