@@ -77,6 +77,7 @@ function copyFiles() {
     ".claude/hooks",
     ".claude/docs/patterns/git",
     ".claude/docs/concepts",
+    "tools",
   ];
 
   for (const dir of dirs) {

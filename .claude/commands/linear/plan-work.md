@@ -66,7 +66,7 @@ If `--craft` flag is present, run CRAFT automatically. Otherwise, ask the user: 
 - Search the codebase for 2–5 relevant files using Grep/Glob — summarise patterns or constraints, avoid exhaustive repository analysis
 - Check Linear for similar issues via `list_issues` (broader search than step 2)
 - Read relevant project documentation if necessary (see [reference/project-docs.md](reference/project-docs.md) for standard paths)
-- Fetch available labels via `list_issue_labels` for team "Playground"
+- Fetch available labels via `list_issue_labels` for the resolved team
 - Summarise findings for use in the draft
 
 ### 5. Test consideration
@@ -160,7 +160,7 @@ If **yes**, run the three-voice feedback loop (Claude → ChatGPT → Claude →
 1. **Send to ChatGPT** — send the current draft (including Claude's assessment) to ChatGPT:
 
 ```bash
-python -m codefu.api.openai.chat "<full draft text + Claude assessment>" -s "You are reviewing a Linear issue draft and a first review from Claude. Give specific, actionable feedback on the problem statement, scope, and acceptance criteria. Point out gaps, assumptions, or scope creep. Agree or disagree with the first review. Be direct."
+python tools/openrouter-chat.py "<full draft text + Claude assessment>" -m openai/gpt-4.1 -s "You are reviewing a Linear issue draft and a first review from Claude. Give specific, actionable feedback on the problem statement, scope, and acceptance criteria. Point out gaps, assumptions, or scope creep. Agree or disagree with the first review. Be direct."
 ```
 
 2. **Show ChatGPT's feedback** — display the full ChatGPT response as text output so the user can read it. Do not summarise or collapse it — the user needs to see the raw feedback before Claude responds. Use a heading like "**ChatGPT's feedback (round N):**" followed by the complete response text.
@@ -186,7 +186,7 @@ Only after explicit approval:
 
 ```
 save_issue with:
-  - team: "Playground"
+  - team: resolved team
   - project: resolved project
   - status: "Backlog"
   - title, description, priority, and labels from the draft
