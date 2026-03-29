@@ -3,7 +3,13 @@
   --vp-c-text-2: #4a4a4a;
   --vp-c-text-3: #6a6a6a;
   --vp-code-color: #1a1a1a;
+}
 
+.dark {
+  --vp-c-text-1: #ffffffde;
+  --vp-c-text-2: #ffffffab;
+  --vp-c-text-3: #ffffff80;
+  --vp-code-color: #ffffffde;
 }
 
 .VPHero .VPImage {
