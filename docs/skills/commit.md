@@ -203,3 +203,7 @@ Each gets its own commit — you want to be able to revert the feature without l
 - **Better context** — AI can understand the purpose of each change
 - **Clearer patterns** — atomic commits help AI learn your coding patterns
 - **Enhanced code review** — AI tools can provide better insights on focused changes
+
+## Under the hood
+
+This page is the human-readable overview. The full agent specification — including the coherence test edge cases, the pre-commit atomicity trap, and the session coherence check — lives in `.claude/skills/commit/SKILL.md` and `.claude/skills/commit/WORKFLOW.md` inside your project after [installation](/install). Those files are what the agent actually follows when you run `/commit`.

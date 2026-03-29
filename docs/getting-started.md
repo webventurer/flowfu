@@ -44,6 +44,8 @@ gh repo clone webventurer/app-starter
 
 ## Next steps
 
-- [Install codefu-core](/install) into your project
+- [How it works](/how-it-works) — see what gets installed and how the pieces connect
+- [Install codefu](/install) into your project
 - Learn about [atomic commits](/skills/commit)
 - Set up the [Linear workflow](/skills/linear)
+- Generate better prompts with [/craft](/skills/craft)

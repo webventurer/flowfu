@@ -9,6 +9,7 @@ export default defineConfig({
       { text: 'Skills', items: [
         { text: '/commit', link: '/skills/commit' },
         { text: '/linear', link: '/skills/linear' },
+        { text: '/craft', link: '/skills/craft' },
       ]},
       { text: 'GitHub', link: 'https://github.com/webventurer/codefu-core' },
     ],
@@ -17,6 +18,7 @@ export default defineConfig({
         text: 'Guide',
         items: [
           { text: 'Getting started', link: '/getting-started' },
+          { text: 'How it works', link: '/how-it-works' },
           { text: 'Install', link: '/install' },
         ],
       },
@@ -25,6 +27,7 @@ export default defineConfig({
         items: [
           { text: '/commit — Atomic commits', link: '/skills/commit' },
           { text: '/linear — Linear workflow', link: '/skills/linear' },
+          { text: '/craft — Prompt generation', link: '/skills/craft' },
         ],
       },
       {

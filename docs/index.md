@@ -23,6 +23,7 @@ features:
   - title: /linear — Linear workflow
     details: Five commands covering the full development cycle, from planning through to merge — all without leaving Claude Code.
     link: /skills/linear
-  - title: No runtime dependencies
-    details: Both skills are installed as plain markdown files in your .claude/ directory — no lock-in, fully customisable to your team's standards.
+  - title: /craft — Prompt generation
+    details: Generate structured prompts using the C.R.A.F.T. framework — Context, Role, Action, Format, Target audience — that consistently produce exceptional LLM output.
+    link: /skills/craft
 ---
