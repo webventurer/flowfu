@@ -2,6 +2,8 @@
 
 Kanban is a workflow management method that visualises work as cards moving across columns on a board. Each column represents a stage — work flows left to right, and the board makes bottlenecks visible at a glance.
 
+![Kanban board](/kanban-board.svg)
+
 ## The columns
 
 | Column | Purpose | Entry rule | Exit rule |
