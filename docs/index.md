@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: codefu-core
+  name: codefu
   text: From vibe coder to agentic engineer
   tagline: Claude Code skills for atomic commits and Linear workflow
   image:
