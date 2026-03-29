@@ -12,10 +12,10 @@ The `/commit` skill encodes a **four-pass methodology** that separates content d
 
 ## Linear integration
 
-![Linear board view](/linear-board.jpg)
+![Kanban board](/kanban-board.svg)
 *Issues flow from Backlog through Doing to Done, driven entirely by `/linear` commands.*
 
-The `/linear` commands connect your development workflow directly to [Linear](https://linear.app), the issue tracking and project management tool built for modern software teams.
+The `/linear` commands connect your development workflow directly to [Linear](https://linear.app). This is an opinionated choice — Linear is keyboard-driven, git-integrated, and built for the way modern software teams actually work. No drag-and-drop boards, no workflow bloat.
 
 Rather than context-switching between your editor and a browser, you can plan work, create issues, implement features, handle PR feedback, and close issues — all from within Claude Code. The five commands cover the **full development lifecycle**: from researching a problem and writing a well-structured issue, through to merging an approved pull request and marking it done.
 

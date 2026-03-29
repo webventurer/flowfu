@@ -4,7 +4,7 @@
 
 Agents can produce large volumes of changes in a single session. Without discipline, those changes land as **monolithic commits** — impossible to review, difficult to revert, and dangerous to bisect. And without a connection to *why* the work exists, the agent operates in isolation — shipping code that nobody asked for, or solving the wrong problem entirely.
 
-codefu-core gives you three Claude Code skills that turn you from a **vibe coder** into an **agentic engineer** — atomic commits where every commit is one complete conceptual unit of work, a [Linear](https://linear.app) workflow that ties every change to a real objective, and structured prompt generation that sharpens your thinking before the agent starts.
+codefu-core gives you three Claude Code skills that turn you from a **vibe coder** into an **agentic engineer** — atomic commits where every commit is one complete conceptual unit of work, a [Linear](https://linear.app) workflow that ties every change to a real objective, and structured prompt generation that sharpens your thinking before the agent starts. Linear is an opinionated choice — it's keyboard-driven, git-integrated, and built for the way modern software teams actually work.
 
 Everything installs as plain markdown into your `.claude/` directory. No runtime dependencies, no lock-in — read it, change it, make it yours.
 

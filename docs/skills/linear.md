@@ -14,7 +14,7 @@ Five commands covering the full development cycle, from planning through to merg
 /linear:finish PG-X         # squash merge, clean up, Done
 ```
 
-![Linear board view](/linear-board.jpg)
+![Kanban board](/kanban-board.svg)
 *Issues flow from Backlog through Doing to Done, driven entirely by `/linear` commands. See the [Kanban process](/reference/kanban) for how the columns work.*
 
 ## Commands
