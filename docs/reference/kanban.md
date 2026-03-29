@@ -16,13 +16,12 @@ Kanban is a workflow management method that visualises work as cards moving acro
 
 ## How work flows
 
-```
-Backlog → To do → Doing → In review → Done
-                    ↑          |
-                    └─ Waiting ┘
+| | | | | | | |
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| **Backlog** | **To do** | **Doing** | **In review** | **Waiting** | **Done** | **Backburner** |
+| Work we want to achieve | Prioritised, ready to pick up | Actively being worked on | Waiting for review | Blocked externally | Merged and deployed | Valid, but not now |
 
-Backburner ← (parked from any column)
-```
+### The rules
 
 1. **Pull, don't push** — developers pull the next item from To do when they have capacity. Nobody assigns work to a full queue.
 2. **Limit work in progress** — cap how many items can be in Doing and In review at once. This prevents context switching and makes bottlenecks visible.
