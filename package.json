@@ -6,6 +6,7 @@
     "dev": "vitepress dev docs",
     "build:docs": "vitepress build docs",
     "preview:docs": "vitepress preview docs",
+    "fix": "biome check --write .",
     "format": "biome format --write .",
     "lint": "biome lint ."
   },

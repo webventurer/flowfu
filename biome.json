@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["docs/.vitepress/**"]
+    "includes": ["**", "!docs/.vitepress"]
   },
   "formatter": {
     "enabled": true,
