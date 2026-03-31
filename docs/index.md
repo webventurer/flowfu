@@ -4,7 +4,7 @@ layout: home
 hero:
   name: flowfu
   text: All the speed. None of the mess.
-  tagline: Atomic commits, Linear workflow, structured prompts — for AI-assisted development
+  tagline: Kanban-driven discipline for your coding agent
   image:
     src: /codefu-poster.jpg
     alt: flowfu
