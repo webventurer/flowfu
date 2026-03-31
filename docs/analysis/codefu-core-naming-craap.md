@@ -71,9 +71,9 @@ The README leads with the **vibe coding vs agentic engineering** framing — a p
 
 Three different pitches. A developer who needs a Kanban automation layer won't find this. A developer attracted by "codefu" might expect something more transformative than issue lifecycle management.
 
-### The "automatic Kanban" is buried
+### The real value proposition is buried
 
-The Kanban board SVG appears in the README but it's **the second visual**, after the foundations diagram. The most compelling feature — that your board moves itself as you work — is mentioned but not headlined. The name doesn't help surface it either.
+The README leads with the vibe coding vs agentic engineering philosophy. The Kanban board is the second visual. But neither is the real sell — the real sell is **atomic commits**: a git history where every change is one idea, independently revertible, with a reason attached. That's what vibe coding destroys, and it's buried under layers of philosophy and board mechanics.
 
 ### Risk of over-abstraction
 
@@ -89,7 +89,7 @@ The abstract name forces reliance on documentation to explain value. A descripti
 
 ### Counter-risk: Being too literal
 
-A name like "auto-kanban" or "linear-autopilot" would be descriptive but limiting. If you later add skills beyond Linear (Jira integration, GitHub Projects, standalone mode), a literal name becomes a cage. "codefu-core" has room to grow.
+A name like "auto-kanban" or "linear-autopilot" would be descriptive but limiting — and would sell the wrong thing (the board, not the commits). If you later add skills beyond Linear (Jira integration, GitHub Projects, standalone mode), a literal name becomes a cage. "codefu-core" has room to grow. The trick is pairing the brand name with a tagline that sells the outcome (trustworthy history) rather than the mechanism (board automation).
 
 ---
 
@@ -162,7 +162,7 @@ For a new open-source project competing for attention on GitHub, a descriptive n
 
 ### Alignment verdict
 
-The name aligns with the **aspiration** (code mastery) but not with the **mechanism** (automated Kanban + commit discipline). For a project that lives or dies on README-driven discovery, this is a meaningful gap.
+The name aligns with the **aspiration** (code mastery) but not with the **outcome** (trustworthy git history through atomic commits). The mechanism (automated Kanban) is scaffolding — it shouldn't be the headline either. For a project that lives or dies on README-driven discovery, the gap between name and outcome is meaningful.
 
 ---
 
@@ -206,65 +206,83 @@ Valid long-term argument. The question is whether the project is at the stage wh
 
 codefu-core is at **early adoption**. The recommendation:
 
-### Option 1: Keep the name, fix the subtitle
+### Recommended: Rename to flowfu
 
-Keep "codefu-core" but make the GitHub description and tagline do the heavy lifting:
+**flowfu** — *All the speed. None of the mess.*
 
-```
-codefu-core — Automatic Kanban for AI-assisted development
-```
+| Dimension | Assessment |
+|:----------|:-----------|
+| **What "flow" signals** | Workflow, continuous movement, Kanban flow — all things the tool actually does |
+| **What "fu" signals** | Mastery, discipline — aligned with the anti-vibe-coding message |
+| **Brand family** | Keeps the "fu" lineage from codefu. The parent repo is the research lab; flowfu is the distributable product |
+| **No "core" suffix** | No false expectation of a library/SDK with import/extend semantics |
+| **Discoverability** | "flow" gives a partial signal for developers searching for workflow tools |
+| **Length** | Two syllables, six characters, easy to type and say |
 
-or
+**The one weakness:** "flow" could read as "flow state" (productivity/focus) rather than "workflow." But that's arguably a feature — flow state is aspirational, workflow is mechanical. The tool delivers both: the workflow scaffolding that lets the developer stay in flow.
 
-```
-codefu-core — Your board moves itself. Atomic commits, automated lifecycle, zero vibe coding.
-```
+#### Why the tagline matters as much as the name
 
-**Pros:** Brand continuity, no breaking changes, memorable
-**Cons:** Still requires subtitle to communicate value
+The name creates recognition. The tagline creates understanding. Together they need to answer "what is this and what does it give me?" in under ten words.
 
-### Option 2: Rename to something descriptive
+#### Applying FAB to the tagline
 
-| Candidate | Signal | Risk |
-|:----------|:-------|:-----|
-| `agentboard` | AI + Kanban | Too literal, limits growth |
-| `flowfu` | Flow/workflow + mastery | Better signal, keeps brand family |
-| `agentic-flow` | AI-driven workflow | Descriptive, less memorable |
-| `claude-kanban` | Exactly what it is | Too narrow, implies official Anthropic product |
+The first tagline attempt — *"Atomic commits for the agentic age"* — stopped at the feature. It's like saying "disc brakes for modern cars." True, but the benefit is you can stop safely at speed. The FAB chain for this project:
 
-### Option 3: Reframe the wrapper entirely
+| | |
+|:--|:--|
+| **Feature** | Atomic commits, automated workflow, structured prompts |
+| **Advantage** | Every change is one idea, independently revertible, with a reason attached |
+| **Benefit** | You get AI speed without the entropy. You can change your mind safely. The codebase is still yours to steer six months in. |
 
-The deeper question: is "codefu-core" trying to be too many things?
+The tagline needs to land at the benefit level — what the developer *feels*, not what the tool *does*.
 
-- A **methodology** (agentic engineering)
-- A **tool** (Kanban automation)
-- A **library** (three installable skills)
-- A **brand** (codefu)
+**The recommended pairing:**
 
-Methodologies need books and talks. Tools need discoverability. Libraries need APIs. Brands need marketing. Trying to serve all four with one name and one repo creates tension.
+> **flowfu** — *All the speed. None of the mess.*
 
-**Possible reframe:** codefu-core is a **tool** first. The methodology lives in docs and blog posts. The brand lives in the broader codefu ecosystem. The "core" is the installable thing that automates your board and disciplines your commits.
+Eight words. No jargon. It tells you:
+- **What you keep**: the speed that AI-assisted development gives you
+- **What you lose**: the entropy, the tangled history, the fear of touching things
+- **The implicit promise**: you don't have to choose between fast and clean
 
-If you accept that framing, then the name should describe the tool, and the methodology can be the story you tell *about* the tool.
+It works because every developer who's vibe-coded past day ten knows exactly what "the mess" is. They've lived it. The tagline names their pain without explaining the mechanism. The README explains the mechanism.
+
+### What happens to "codefu"?
+
+The naming clarifies the relationship between the two repos:
+
+| Repo | Role | Audience |
+|:-----|:-----|:---------|
+| **codefu** | Research lab — AI patterns, CRAAP framework, harvest skill, experiments | You (and other methodology researchers) |
+| **flowfu** | Distributable product — the three skills that ship to developers | Anyone using Claude Code |
+
+"codefu" stays as the parent brand and research home. "flowfu" is what developers install. This is cleaner than "codefu-core" because it doesn't require understanding that a "core" was extracted from a larger thing — flowfu stands on its own.
 
 ---
 
 ## Verdict
 
-**Is "codefu-core" the right name?** It depends on your distribution strategy:
+**Is "codefu-core" the right wrapper?** No. It communicates brand (code mastery) without signalling function (workflow discipline, atomic commits). The "core" suffix implies a library extracted from a larger product, but this is markdown instructions for an AI agent. The name requires a full README read before a developer knows whether to care.
 
-| If your strategy is... | Then... |
-|:------------------------|:--------|
-| GitHub discoverability | No. The name is opaque. Rename or add a strong subtitle |
-| Word-of-mouth / blog posts | Maybe. The brand is memorable but needs explanation |
-| Building a broader codefu ecosystem | Yes. "core" correctly positions this as the distributable kernel |
+**Is this an "automatic Kanban board"?** The Kanban lifecycle is the mechanism, but it's not the product. Nobody cares that a card moved columns. If the board is invisible, it's working. The thing that *matters* is what the developer gets at the end: **a git history they can trust**.
 
-**Is "codefu-core" the right wrapper for an automatic Kanban board?** Not quite. The wrapper frames it as "code mastery" when the operational heart is "workflow automation." The philosophy (agentic engineering) is compelling but it's the *story*, not the *product*. The product is: your Kanban board moves itself while your commits stay atomic.
+### What's actually being sold
 
-**Recommendation:** Keep the brand. Fix the framing. Lead with what it *does* (automates your development workflow), not what it *prevents* (vibe coding). The anti-vibe-coding message is a great hook for blog posts and talks, but the README and name should answer "what does this do for me?" before "what philosophy does this embody?"
+The core product is **atomic commits** — one idea per commit, independently revertible, with a reason attached. That's what vibe coding destroys (monolithic commits, no traceability, "updates" in the git log) and what this tool restores.
 
-The strongest version of this project leads with: **"Your board moves itself."** Everything else — atomic commits, crafted prompts, agentic engineering — supports that headline.
+The board exists to make atomic commits happen *naturally* rather than by heroic discipline. The workflow tracks issues so the agent works on what was asked for. The craft skill sharpens input so the agent starts from clarity. But the *output* — the thing the developer actually cares about six months later — is the commit history.
+
+**Atomic commits are the unit of trust.** The board, the workflow, the lifecycle — those exist to make atomic commits happen naturally. The board is scaffolding. The commit is the product.
+
+### Recommendation
+
+Rename to **flowfu**. Pair with the tagline: ***All the speed. None of the mess.***
+
+The name signals workflow and discipline. The tagline sells the benefit — you keep AI speed without the entropy that normally comes with it. No jargon, no mechanism, just the promise. Every developer who's vibe-coded past day ten knows what "the mess" is. The tagline names their pain. The README explains the cure.
+
+codefu stays as the research lab. flowfu is the product that ships.
 
 ---
 
-*Analysis generated using the CRAAP framework. 2026-03-31*
+*Analysis generated using the CRAAP framework. Updated 2026-03-31*
