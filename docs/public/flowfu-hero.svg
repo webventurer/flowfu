@@ -1,80 +1,73 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 336" fill="none">
   <defs>
     <style>
-      .col-bg { fill: #f4f5f7; rx: 8; }
-      .col-header { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 600; fill: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
-      .card { fill: #ffffff; rx: 6; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.08)); }
-      .card-text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; fill: #374151; }
-      .card-id { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 10px; fill: #9ca3af; }
-      .card-moving { fill: #ffffff; rx: 6; filter: drop-shadow(0 4px 12px rgba(99,102,241,0.25)); }
+      .col-bg { fill: #f0f1f4; }
+      .col-header { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 19px; font-weight: 700; fill: #4b5563; text-transform: uppercase; letter-spacing: 0.06em; }
+      .card { fill: #ffffff; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
+      .card-text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 18px; font-weight: 500; fill: #1f2937; }
+      .card-id { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; fill: #9ca3af; }
+      .card-moving { fill: #ffffff; filter: drop-shadow(0 12px 36px rgba(99,102,241,0.35)); }
+      .moving-text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 24px; font-weight: 600; fill: #1f2937; }
+      .moving-id { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 17px; fill: #9ca3af; }
       .accent-dot { fill: #6366f1; }
       .done-dot { fill: #22c55e; }
-      .trail { stroke: #6366f1; stroke-width: 2; stroke-dasharray: 6 4; opacity: 0.3; }
-      .arrow { fill: #6366f1; opacity: 0.4; }
-      .col-count { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #9ca3af; }
+      .motion-line { stroke: #6366f1; stroke-linecap: round; }
+      .col-count { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 16px; fill: #9ca3af; font-weight: 500; }
     </style>
   </defs>
 
   <!-- Background -->
-  <rect width="720" height="320" fill="#fafafa" rx="12"/>
-
-  <!-- Column: To do -->
-  <rect class="col-bg" x="24" y="20" width="210" height="280" rx="8"/>
-  <text class="col-header" x="40" y="48">To do</text>
-  <text class="col-count" x="90" y="48">2</text>
-
-  <!-- To do cards -->
-  <rect class="card" x="36" y="62" width="186" height="56" rx="6"/>
-  <circle class="accent-dot" cx="48" cy="82" r="3"/>
-  <text class="card-text" x="58" y="86">Add dark mode toggle</text>
-  <text class="card-id" x="58" y="102">PG-142</text>
-
-  <rect class="card" x="36" y="128" width="186" height="56" rx="6"/>
-  <circle class="accent-dot" cx="48" cy="148" r="3"/>
-  <text class="card-text" x="58" y="152">Fix validation errors</text>
-  <text class="card-id" x="58" y="168">PG-143</text>
+  <rect width="720" height="336" fill="#fafafa" rx="14"/>
 
   <!-- Column: Doing -->
-  <rect class="col-bg" x="255" y="20" width="210" height="280" rx="8"/>
-  <text class="col-header" x="271" y="48">Doing</text>
-  <text class="col-count" x="319" y="48">1</text>
+  <rect class="col-bg" x="19" y="17" width="204" height="302" rx="12"/>
+  <text class="col-header" x="38" y="53">Doing</text>
+  <text class="col-count" x="120" y="53">1</text>
 
-  <!-- Doing card (static) -->
-  <rect class="card" x="267" y="62" width="186" height="56" rx="6"/>
-  <circle class="accent-dot" cx="279" cy="82" r="3"/>
-  <text class="card-text" x="289" y="86">Refactor auth service</text>
-  <text class="card-id" x="289" y="102">PG-139</text>
+  <!-- Doing: ghost outline where the card is leaving -->
+  <rect x="34" y="72" width="175" height="72" rx="10" fill="none" stroke="#d1d5db" stroke-width="1.8" stroke-dasharray="7 5" opacity="0.4"/>
 
-  <!-- Motion trail from Doing to Done -->
-  <path class="trail" d="M 453 155 C 470 155, 475 155, 490 155"/>
-  <polygon class="arrow" points="488,149 498,155 488,161"/>
+  <!-- Doing: a second card still in place -->
+  <rect class="card" x="34" y="158" width="175" height="72" rx="10"/>
+  <circle class="accent-dot" cx="53" cy="187" r="5"/>
+  <text class="card-text" x="67" y="192">Add dark mode</text>
+  <text class="card-id" x="67" y="214">PG-142</text>
 
   <!-- Column: Done -->
-  <rect class="col-bg" x="486" y="20" width="210" height="280" rx="8"/>
-  <text class="col-header" x="502" y="48">Done</text>
-  <text class="col-count" x="543" y="48">3</text>
+  <rect class="col-bg" x="497" y="17" width="204" height="302" rx="12"/>
+  <text class="col-header" x="516" y="53">Done</text>
+  <text class="col-count" x="586" y="53">2</text>
 
   <!-- Done cards -->
-  <rect class="card" x="498" y="62" width="186" height="56" rx="6"/>
-  <circle class="done-dot" cx="510" cy="82" r="3"/>
-  <text class="card-text" x="520" y="86">Set up CI pipeline</text>
-  <text class="card-id" x="520" y="102">PG-135</text>
+  <rect class="card" x="511" y="72" width="175" height="72" rx="10"/>
+  <circle class="done-dot" cx="530" cy="101" r="5"/>
+  <text class="card-text" x="545" y="106">Set up CI</text>
+  <text class="card-id" x="545" y="127">PG-135</text>
 
-  <rect class="card" x="498" y="128" width="186" height="56" rx="6"/>
-  <circle class="done-dot" cx="510" cy="148" r="3"/>
-  <text class="card-text" x="520" y="152">Add user onboarding</text>
-  <text class="card-id" x="520" y="168">PG-136</text>
+  <rect class="card" x="511" y="158" width="175" height="72" rx="10"/>
+  <circle class="done-dot" cx="530" cy="187" r="5"/>
+  <text class="card-text" x="545" y="192">Add onboarding</text>
+  <text class="card-id" x="545" y="214">PG-136</text>
 
-  <!-- Moving card (in transit from Doing → Done) -->
-  <g transform="translate(430, 130) rotate(-3)">
-    <rect class="card-moving" x="0" y="0" width="186" height="56" rx="6"/>
-    <circle class="accent-dot" cx="12" cy="20" r="3"/>
-    <text class="card-text" x="22" y="24">Update API endpoints</text>
-    <text class="card-id" x="22" y="40">PG-140</text>
+  <!-- The moving card: BIG, centred between columns -->
+  <g transform="translate(238, 82)">
+    <!-- Motion lines behind card — prominent streaks -->
+    <line class="motion-line" x1="-5" y1="34" x2="-58" y2="34" stroke-width="5" opacity="0.3"/>
+    <line class="motion-line" x1="-5" y1="50" x2="-67" y2="50" stroke-width="4" opacity="0.25"/>
+    <line class="motion-line" x1="-5" y1="67" x2="-53" y2="67" stroke-width="3.5" opacity="0.2"/>
+    <line class="motion-line" x1="-5" y1="84" x2="-62" y2="84" stroke-width="4" opacity="0.15"/>
+    <line class="motion-line" x1="-5" y1="101" x2="-48" y2="101" stroke-width="3" opacity="0.1"/>
+
+    <!-- Card -->
+    <rect class="card-moving" x="0" y="0" width="245" height="130" rx="12"/>
+    <circle cx="29" cy="48" r="7" fill="#6366f1"/>
+    <text class="moving-text" x="48" y="55">Refactor auth</text>
+    <text class="moving-id" x="48" y="86">PG-139</text>
+
+    <!-- Arrow ahead of card -->
+    <polygon points="254,58 274,65 254,72" fill="#6366f1" opacity="0.35"/>
   </g>
 
-  <!-- Subtle motion lines behind moving card -->
-  <line x1="420" y1="148" x2="405" y2="148" stroke="#6366f1" stroke-width="1.5" opacity="0.15"/>
-  <line x1="420" y1="155" x2="398" y2="155" stroke="#6366f1" stroke-width="1.5" opacity="0.1"/>
-  <line x1="420" y1="162" x2="408" y2="162" stroke="#6366f1" stroke-width="1.5" opacity="0.12"/>
+  <!-- Subtle connecting dash from Doing ghost to moving card -->
+  <path d="M 209 108 L 233 108" fill="none" stroke="#6366f1" stroke-width="1.8" opacity="0.15" stroke-dasharray="5 4"/>
 </svg>
