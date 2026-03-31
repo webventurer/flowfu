@@ -76,7 +76,7 @@ pnpm dev
 
 ## Built by
 
-![CODEFU!](designs/codefu-poster.jpg)
+![flowfu](docs/public/flowfu-hero.svg)
 
 [@mikemindel](https://github.com/mikemindel)
 

@@ -6,8 +6,8 @@ hero:
   text: All the speed. None of the mess.
   tagline: Kanban-driven discipline for your coding agent
   image:
-    src: /codefu-poster.jpg
-    alt: flowfu
+    src: /flowfu-hero.svg
+    alt: flowfu — cards flowing through a Kanban board
   actions:
     - theme: brand
       text: Getting started
