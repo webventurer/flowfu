@@ -19,7 +19,7 @@ Accepts a description and optional flags: `/plan-work --research --craft "add er
 - Titles are imperative and start with a verb (Add, Fix, Replace, Remove…). Avoid "Investigate" unless the outcome genuinely is a report, not a code change.
 - Never assign the issue unless the user explicitly asks.
 - Labels are optional — suggest at most 3, only when clearly relevant. Prefer no labels over speculative ones.
-- Priority defaults to Medium. Only upgrade if the user says it's urgent or the description implies user-facing breakage.
+- Priority defaults to Medium. Only upgrade if the user says it's urgent or the description implies user-facing impact (breakage, a time-sensitive launch, etc.).
 - Research mode exists to improve the draft, not to produce an audit. Cap file exploration at 2–5 relevant files; summarise patterns, don't catalogue the repo.
 - Duplicate handling is two-tier: exact/near-exact → warn strongly and ask; similar/related → mention briefly and continue.
 - The user always gets final approval before creation. Never auto-create.
@@ -87,7 +87,7 @@ Omit the section entirely when tests don't apply.
 
 ### 6. Draft the issue
 
-**Quick mode** — use the full issue structure from [ISSUE-TEMPLATE.md](reference/ISSUE-TEMPLATE.md) (Title, Description with Why this matters, What's wrong, What we'll do, What we won't do, Expected outcome, How to test it, Assumptions to confirm).
+**Quick mode** — use the full issue structure from [ISSUE-TEMPLATE.md](reference/ISSUE-TEMPLATE.md) (Title, Description with Why this matters, Where things stand, What we'll do, What we won't do, Expected outcome, How to test it, Assumptions to confirm).
 
 **Research mode** — also include the research mode additions from [ISSUE-TEMPLATE.md](reference/ISSUE-TEMPLATE.md) (Implementation notes, Code examples, Related code, Related issues).
 
@@ -107,7 +107,7 @@ If **yes**, run the three-voice feedback loop (Claude → ChatGPT → Claude →
 1. **Send to ChatGPT** — send the current draft (including Claude's assessment) to ChatGPT:
 
 ```bash
-uv run tools/openrouter-chat.py "<full draft text + Claude assessment>" -m openai/gpt-5.4-pro -s "You are reviewing a Linear issue draft and a first review from Claude. Give specific, actionable feedback on why this matters, what's wrong, what we'll do, and expected outcome. Point out gaps, assumptions, or scope creep. Agree or disagree with the first review. Be direct."
+uv run tools/openrouter-chat.py "<full draft text + Claude assessment>" -m openai/gpt-5.4-pro -s "You are reviewing a Linear issue draft and a first review from Claude. Give specific, actionable feedback on why this matters, where things stand, what we'll do, and expected outcome. Point out gaps, assumptions, or scope creep. Agree or disagree with the first review. Be direct."
 ```
 
 2. **Show ChatGPT's feedback** — display the full ChatGPT response as text output so the user can read it. Do not summarise or collapse it — the user needs to see the raw feedback before Claude responds. Use a heading like "**ChatGPT's feedback (round N):**" followed by the complete response text.
