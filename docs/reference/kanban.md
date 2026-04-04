@@ -59,3 +59,16 @@ There's no universal number. A common starting point is **number of team members
 - **Skipping Waiting** — leaving blocked items in Doing hides the true state of work and inflates the active count.
 - **Backlog as a dumping ground** — an ungroomed backlog grows endlessly. Regularly prune items that will never be done.
 - **Moving cards backwards** — if review finds issues, the card goes back to Doing (not to To do). Backwards movement through earlier stages signals a process problem.
+
+## Articles
+
+- [What is Kanban? — Businessmap](https://businessmap.io/kanban-resources/getting-started/what-is-kanban)
+- [Kanban — Atlassian](https://www.atlassian.com/agile/kanban)
+- [Kanban boards — Atlassian](https://www.atlassian.com/agile/kanban/boards)
+
+## Videos
+
+1. [What is Kanban?](https://www.youtube.com/watch?v=iVaFVa7HYj4)
+2. [What is a Kanban board?](https://www.youtube.com/watch?v=Bcid33tgq8A)
+3. [What are Kanban cards?](https://www.youtube.com/watch?v=PxXdcQrPIUI)
+4. [Kanban WIP limits](https://www.youtube.com/watch?v=zEJn6eQO6FE)
