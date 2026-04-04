@@ -22,57 +22,6 @@
 
 ---
 
-## Example issue
-
-> **Verify new issue template format renders correctly**
-
-### Why this matters
-*Sets the stakes — why this work is worth doing now.*
-
-Every issue we create uses this template. If the format is
-broken, every card in the backlog is harder to read.
-
-### Where things stand
-*Current state — the gap, limitation, or opportunity.*
-
-The issue template has new conversational headings but
-no one has checked whether they render correctly in
-Linear's markdown.
-
-### What we'll do
-*Concrete deliverables — what ships when this closes.*
-- Create a single placeholder issue using the new template
-  format
-- Visual check that all sections render as expected
-
-### What we won't do
-*Draws the line so scope doesn't creep.*
-
-No changes to the template based on this card — just
-validation.
-
-### Expected outcome
-*Observable proof it's done — what a reviewer should see.*
-- Issue appears in Linear with all sections visible and
-  correctly formatted
-- "Why this matters" section appears first, before
-  "Where things stand"
-- All headings render as distinct sections with no overlap
-
-### How to test it
-*How to verify the outcome is real.*
-
-Visual inspection in Linear — open the issue and confirm each
-heading renders as
-a separate section with correct hierarchy.
-
-### Assumptions to confirm
-*Unknowns that could change the plan.*
-- Linear renders h3 markdown headings consistently across
-  views (board, detail, sidebar)
-
----
-
 Replace `[user's description]` with what the user provided:
 
 ```text
@@ -172,3 +121,53 @@ are right there in the issue.
 
 ### Related issues
 - Links/identifiers of similar Linear issues found
+
+---
+
+## Example issue
+
+> **Verify new issue template format renders correctly**
+
+### Why this matters
+*Sets the stakes — why this work is worth doing now.*
+
+Every issue we create uses this template. If the format is
+broken, every card in the backlog is harder to read.
+
+### Where things stand
+*Current state — the gap, limitation, or opportunity.*
+
+The issue template has new conversational headings but
+no one has checked whether they render correctly in
+Linear's markdown.
+
+### What we'll do
+*Concrete deliverables — what ships when this closes.*
+- Create a single placeholder issue using the new template
+  format
+- Visual check that all sections render as expected
+
+### What we won't do
+*Draws the line so scope doesn't creep.*
+
+No changes to the template based on this card — just
+validation.
+
+### Expected outcome
+*Observable proof it's done — what a reviewer should see.*
+- Issue appears in Linear with all sections visible and
+  correctly formatted
+- "Why this matters" section appears first, before
+  "Where things stand"
+- All headings render as distinct sections with no overlap
+
+### How to test it
+*How to verify the outcome is real.*
+
+Visual inspection in Linear — open the issue and confirm each
+heading renders as a separate section with correct hierarchy.
+
+### Assumptions to confirm
+*Unknowns that could change the plan.*
+- Linear renders h3 markdown headings consistently across
+  views (board, detail, sidebar)
