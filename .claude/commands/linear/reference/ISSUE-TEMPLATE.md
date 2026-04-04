@@ -2,7 +2,7 @@
 
 > **What this is**: A CRAFT prompt template used by `plan-work.md` step 3 to turn a vague user description into a precise problem statement before research and drafting.
 >
-> **Why it exists**: Users often describe work loosely — "add error handling" or "fix the dashboard". Running this through CRAFT produces a structured brief (problem, outcome, acceptance criteria, scope) that gives the research step (4) precise targets and the drafting step (5) concrete material to work with.
+> **Why it exists**: Users often describe work loosely — "add error handling" or "fix the dashboard". Running this through CRAFT produces a structured brief (why it matters, what's wrong, what we'll do, expected outcome) that gives the research step (4) precise targets and the drafting step (6) concrete material to work with.
 >
 > **Where it comes from**: The [CRAFT framework](../../../skills/craft/SKILL.md) (Context, Role, Action, Format, Target audience) — a meta-prompting technique for generating structured, high-quality LLM outputs.
 
@@ -15,8 +15,8 @@ CONTEXT:
 We are creating a Linear issue for a software project. The user
 has described the work as: "[user's description]". This prompt
 will be used to guide codebase research and issue drafting — it
-needs to surface the right problem, the right scope, and the
-right success criteria so the resulting issue is immediately
+needs to surface why this matters, what's wrong, what we'll
+do, and the expected outcome so the resulting issue is immediately
 actionable by a developer.
 
 ROLE:
@@ -28,16 +28,18 @@ and writing issue descriptions that a developer can start
 working on without asking clarifying questions.
 
 ACTION:
-1. Restate the user's description as a clear problem statement
-   — what is broken, missing, or suboptimal?
-2. Explain why this matters — the user impact, business reason,
+1. Explain why this matters — the user impact, business reason,
    or technical risk that makes this worth doing now
-3. Identify the single most important outcome (one deliverable,
-   not a bundle of changes)
-4. List 2–3 acceptance criteria that define "done"
-5. Flag any ambiguities or assumptions that need confirming
-6. Suggest a scope boundary — what is explicitly out of scope
-   for this issue?
+2. Restate the user's description as a clear problem statement
+   — what is broken, missing, or suboptimal?
+3. Define what we'll do — the deliverable and scope boundary
+4. Define what we won't do — scope exclusions, only if
+   genuinely useful
+5. Define the expected outcome — observable results that prove
+   it's done, plus measurable metrics if applicable
+6. Describe how to test it — expected behaviour, edge cases,
+   error conditions (omit for docs, config, or exploratory work)
+7. Flag any ambiguities or assumptions that need confirming
 
 FORMAT:
 Return a structured brief matching the Linear issue template:
@@ -48,29 +50,29 @@ toggle to dashboard header"). Under 70 characters.
 
 ## Description
 
-### Problem
-What problem exists (1–2 sentences)
+### Why this matters
+User impact, business reason, or technical risk that makes
+this worth doing now (1–2 sentences)
 
-### Why
-Why this matters — user impact, business reason, or technical
-risk that makes it worth doing now (1–2 sentences)
+### What's wrong
+What is broken, missing, or suboptimal (1–2 sentences)
 
-### Goal
-Desired outcome (1 sentence)
+### What we'll do
+- Bullet list of what's included (the deliverable and scope)
 
-### Scope
-- Bullet list of what's included
-
-### Out of scope
+### What we won't do
 (Only if genuinely useful — omit if nothing meaningful)
 
-### Acceptance criteria
-Observable outcomes that define "done" (2–3 bullets). These are
-not implementation steps — they describe what a reviewer should
-see, not how to code it.
+### Expected outcome
+Observable results that prove it's done (2–3 bullets). These
+are not implementation steps — they describe what a reviewer
+should see, not how to code it. Include measurable metrics
+when applicable.
 
-### Success metric
-(Only if measurable — omit if not applicable)
+### How to test it
+(Optional — omit for docs, config, or exploratory work)
+Write tests first. What to test: expected behaviour, edge cases,
+error conditions.
 
 ### Assumptions to confirm
 - Bullet list of ambiguities that need resolving
