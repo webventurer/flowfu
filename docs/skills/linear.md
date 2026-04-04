@@ -28,7 +28,7 @@ Priority ordering: build failure > PRs needing fix > in-progress work > PRs need
 For each open PR, checks GitHub for `CHANGES_REQUESTED` reviews and unresolved comments. PRs needing fix are surfaced above new backlog work.
 
 ![Linear issue detail](/linear-card.jpg)
-*A well-structured issue created by `/linear:plan-work` — clear Problem, Goal, and Scope sections that give the agent everything it needs to start work.*
+*A well-structured issue created by `/linear:plan-work` — see the [issue template](/reference/issue-template) for the full section structure.*
 
 ### /linear:plan-work
 
