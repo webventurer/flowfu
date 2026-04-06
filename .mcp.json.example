@@ -1,0 +1,38 @@
+{
+  "mcpServers": {
+
+    "_comment_oauth": "Option 1: OAuth (single workspace) — browser login, no keys needed",
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]
+    },
+
+    "_comment_api_key": "Option 2: API key (multiple workspaces) — one entry per workspace",
+    "linear-personal": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.linear.app/mcp",
+        "--header",
+        "Authorization:Bearer ${LINEAR_PERSONAL_API_KEY}"
+      ],
+      "env": {
+        "LINEAR_PERSONAL_API_KEY": "${LINEAR_PERSONAL_API_KEY}"
+      }
+    },
+    "linear-team": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.linear.app/mcp",
+        "--header",
+        "Authorization:Bearer ${LINEAR_TEAM_API_KEY}"
+      ],
+      "env": {
+        "LINEAR_TEAM_API_KEY": "${LINEAR_TEAM_API_KEY}"
+      }
+    }
+  }
+}

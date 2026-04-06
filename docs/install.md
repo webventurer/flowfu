@@ -18,23 +18,80 @@ npm install -g @anthropic-ai/claude-code
 
 ### Linear MCP server
 
-The `/linear` commands need the [Linear MCP server](https://www.npmjs.com/package/@anthropic-ai/linear-mcp-server). Add it to your Claude Code MCP config (`~/.claude/mcp.json`):
+The `/linear` commands need Linear's [official MCP server](https://linear.app/docs/mcp). There are two ways to connect — **OAuth** (simplest) or **API key** (needed for multiple workspaces).
+
+Copy `.mcp.json.example` to `.mcp.json` and choose your approach:
+
+#### OAuth (single workspace)
+
+Uses browser-based login — no keys to manage:
 
 ```json
 {
   "mcpServers": {
     "linear": {
       "command": "npx",
-      "args": ["-y", "@anthropic-ai/linear-mcp-server"],
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]
+    }
+  }
+}
+```
+
+On first use, a browser window opens to authenticate. The token is cached locally.
+
+#### API key (multiple workspaces)
+
+When you need separate connections to different Linear workspaces — for example, a personal workspace and a team workspace — use API keys via the `Authorization` header:
+
+```json
+{
+  "mcpServers": {
+    "linear-personal": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.linear.app/mcp",
+        "--header",
+        "Authorization:Bearer ${LINEAR_PERSONAL_API_KEY}"
+      ],
       "env": {
-        "LINEAR_API_KEY": "lin_api_..."
+        "LINEAR_PERSONAL_API_KEY": "${LINEAR_PERSONAL_API_KEY}"
+      }
+    },
+    "linear-team": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.linear.app/mcp",
+        "--header",
+        "Authorization:Bearer ${LINEAR_TEAM_API_KEY}"
+      ],
+      "env": {
+        "LINEAR_TEAM_API_KEY": "${LINEAR_TEAM_API_KEY}"
       }
     }
   }
 }
 ```
 
-Get your Linear API key at [linear.app/settings/api](https://linear.app/settings/api).
+Each entry points to the same `mcp.linear.app/mcp` endpoint but authenticates with a different key. Add the keys to your `~/.env`:
+
+```
+LINEAR_PERSONAL_API_KEY=lin_api_...
+LINEAR_TEAM_API_KEY=lin_api_...
+```
+
+Get your API keys at [linear.app/settings/api](https://linear.app/settings/api) — one per workspace.
+
+#### Verify the connection
+
+```
+/linear:check
+```
+
+This confirms that each configured Linear server responds and shows which workspace it's connected to.
 
 ### GitHub CLI
 

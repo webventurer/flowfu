@@ -111,6 +111,14 @@ function copyFiles() {
   }
 }
 
+function copyExampleFiles() {
+  const files = [".mcp.json.example"];
+  for (const file of files) {
+    const src = join(srcRoot, file);
+    if (existsSync(src)) cpSync(src, join(destRoot, file));
+  }
+}
+
 function mergeSettings() {
   const settingsPath = join(destRoot, ".claude/settings.json");
   mkdirSync(dirname(settingsPath), { recursive: true });
@@ -129,12 +137,14 @@ async function main() {
 
   // Copy skill and command files
   copyFiles();
+  copyExampleFiles();
   console.log("Copied:");
   console.log("  .claude/skills/commit/     (4-pass atomic commit skill)");
   console.log("  .claude/commands/linear/   (Linear workflow commands)");
   console.log("  .claude/hooks/             (commit hook scripts)");
   console.log("  .claude/docs/              (supporting documentation)");
   console.log("  tools/                     (cross-model feedback script)");
+  console.log("  .mcp.json.example          (Linear MCP server template)");
 
   // Merge settings
   const settingsPath = join(destRoot, ".claude/settings.json");
@@ -161,6 +171,7 @@ async function main() {
 
   console.log("\nDone. Available skills:");
   console.log("  /commit              — 4-pass atomic git commits");
+  console.log("  /linear:check        — verify MCP connections");
   console.log("  /linear:start        — implement a Linear issue");
   console.log("  /linear:plan-work    — create a Linear issue");
   console.log("  /linear:fix          — address PR review feedback");
