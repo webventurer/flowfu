@@ -39,6 +39,9 @@ This copies skills, commands, hooks, and docs into your project. It merges hook 
 ## Quick start
 
 ```bash
+# Verify Linear MCP connections
+/linear:check
+
 # See what needs doing
 /linear:next-steps
 
