@@ -12,6 +12,7 @@ This guide covers how to connect Claude Code to Linear via the MCP server.
 
 | Command | What it does |
 |:--------|:-------------|
+| `/linear:check` | Verify MCP connections — confirm each Linear server responds |
 | `/linear:next-steps` | Review priorities, surface PRs needing fix, recommend what to work on next |
 | `/linear:plan-work` | Draft and create a Linear issue with optional `--research` and `--craft` flags |
 | `/linear:start` | Branch, implement, validate, open PR, and review the diff in the terminal |
@@ -24,24 +25,11 @@ See [workflow.md](workflow.md) for detailed command docs and typical flow.
 
 ### 1. Configure the MCP server
 
-Add the Linear MCP server to your Claude Code settings. In your project's `.mcp.json` or global MCP config:
-
-```json
-{
-  "mcpServers": {
-    "linear": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/linear-mcp@latest"]
-    }
-  }
-}
-```
-
-The MCP server handles authentication via its own OAuth flow — no API key needed.
+Copy `.mcp.json.example` to `.mcp.json` and choose OAuth (single workspace) or API key (multiple workspaces). See the [install guide](/install#linear-mcp-server) for both configurations.
 
 ### 2. Verify the connection
 
-Restart Claude Code, then run `/linear:next-steps`. If the MCP server is working, you will see your project's issues and recommendations.
+Run `/linear:check` to confirm each configured Linear server responds. It calls `list_teams` on each server and reports which workspace it's connected to.
 
 ### 3. Install the Linear GitHub integration
 
