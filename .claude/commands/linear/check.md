@@ -18,8 +18,8 @@ Report the result as a table:
 
 | Server | Status | Workspace |
 |:-------|:-------|:----------|
-| linear-personal | Connected | Mike Mindel |
-| linear-team | Connected | Acme Corp |
+| linear-org1 | Connected | Foo Corp |
+| linear-org2 | Connected | Bar Corp |
 
 If a server fails, show the error and suggest checking:
 

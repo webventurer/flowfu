@@ -7,31 +7,31 @@
       "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]
     },
 
-    "_comment_api_key": "Option 2: API key (multiple workspaces) — one entry per workspace",
-    "linear-personal": {
+    "_comment_api_key": "Option 2: API key (multiple orgs) — one entry per org",
+    "linear-org1": {
       "command": "npx",
       "args": [
         "-y",
         "mcp-remote",
         "https://mcp.linear.app/mcp",
         "--header",
-        "Authorization:Bearer ${LINEAR_PERSONAL_API_KEY}"
+        "Authorization:Bearer ${LINEAR_ORG1_API_KEY}"
       ],
       "env": {
-        "LINEAR_PERSONAL_API_KEY": "${LINEAR_PERSONAL_API_KEY}"
+        "LINEAR_ORG1_API_KEY": "${LINEAR_ORG1_API_KEY}"
       }
     },
-    "linear-team": {
+    "linear-org2": {
       "command": "npx",
       "args": [
         "-y",
         "mcp-remote",
         "https://mcp.linear.app/mcp",
         "--header",
-        "Authorization:Bearer ${LINEAR_TEAM_API_KEY}"
+        "Authorization:Bearer ${LINEAR_ORG2_API_KEY}"
       ],
       "env": {
-        "LINEAR_TEAM_API_KEY": "${LINEAR_TEAM_API_KEY}"
+        "LINEAR_ORG2_API_KEY": "${LINEAR_ORG2_API_KEY}"
       }
     }
   }

@@ -25,7 +25,7 @@ See [workflow.md](workflow.md) for detailed command docs and typical flow.
 
 ### 1. Configure the MCP server
 
-Copy `.mcp.json.example` to `.mcp.json` and choose OAuth (single workspace) or API key (multiple workspaces). See the [install guide](/install#linear-mcp-server) for both configurations.
+Copy `.mcp.json.example` to `.mcp.json` and choose OAuth (single org) or API key (multiple orgs). See the [install guide](/install#linear-mcp-server) for both configurations.
 
 ### 2. Verify the connection
 

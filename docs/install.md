@@ -18,11 +18,11 @@ npm install -g @anthropic-ai/claude-code
 
 ### Linear MCP server
 
-The `/linear` commands need Linear's [official MCP server](https://linear.app/docs/mcp). There are two ways to connect — **OAuth** (simplest) or **API key** (needed for multiple workspaces).
+The `/linear` commands need Linear's [official MCP server](https://linear.app/docs/mcp). There are two ways to connect — **OAuth** (simplest) or **API key** (needed for multiple orgs).
 
 Copy `.mcp.json.example` to `.mcp.json` and choose your approach:
 
-#### OAuth (single workspace)
+#### OAuth (single org)
 
 Uses browser-based login — no keys to manage:
 
@@ -39,37 +39,37 @@ Uses browser-based login — no keys to manage:
 
 On first use, a browser window opens to authenticate. The token is cached locally.
 
-#### API key (multiple workspaces)
+#### API key (multiple orgs)
 
-When you need separate connections to different Linear workspaces — for example, a personal workspace and a team workspace — use API keys via the `Authorization` header:
+When you need separate connections to different Linear orgs — add one entry per org with its own API key:
 
 ```json
 {
   "mcpServers": {
-    "linear-personal": {
+    "linear-org1": {
       "command": "npx",
       "args": [
         "-y",
         "mcp-remote",
         "https://mcp.linear.app/mcp",
         "--header",
-        "Authorization:Bearer ${LINEAR_PERSONAL_API_KEY}"
+        "Authorization:Bearer ${LINEAR_ORG1_API_KEY}"
       ],
       "env": {
-        "LINEAR_PERSONAL_API_KEY": "${LINEAR_PERSONAL_API_KEY}"
+        "LINEAR_ORG1_API_KEY": "${LINEAR_ORG1_API_KEY}"
       }
     },
-    "linear-team": {
+    "linear-org2": {
       "command": "npx",
       "args": [
         "-y",
         "mcp-remote",
         "https://mcp.linear.app/mcp",
         "--header",
-        "Authorization:Bearer ${LINEAR_TEAM_API_KEY}"
+        "Authorization:Bearer ${LINEAR_ORG2_API_KEY}"
       ],
       "env": {
-        "LINEAR_TEAM_API_KEY": "${LINEAR_TEAM_API_KEY}"
+        "LINEAR_ORG2_API_KEY": "${LINEAR_ORG2_API_KEY}"
       }
     }
   }
@@ -79,11 +79,11 @@ When you need separate connections to different Linear workspaces — for exampl
 Each entry points to the same `mcp.linear.app/mcp` endpoint but authenticates with a different key. Add the keys to your `~/.env`:
 
 ```
-LINEAR_PERSONAL_API_KEY=lin_api_...
-LINEAR_TEAM_API_KEY=lin_api_...
+LINEAR_ORG1_API_KEY=lin_api_...
+LINEAR_ORG2_API_KEY=lin_api_...
 ```
 
-Get your API keys at [linear.app/settings/api](https://linear.app/settings/api) — one per workspace.
+Get your API keys at [linear.app/settings/api](https://linear.app/settings/api) — one per org. Replace `org1`/`org2` with meaningful names (e.g. `LINEAR_ACME_API_KEY`).
 
 #### Verify the connection
 
