@@ -51,6 +51,17 @@
   }
 }
 
+/* Chevrons after "stride" heading */
+.VPHero .name.clip::after {
+  content: ' \203A\203A\203A';
+  font-size: 1.5em;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  opacity: 0.5;
+  -webkit-text-fill-color: var(--vp-c-brand-1);
+  vertical-align: -0.1em;
+}
+
 @media (min-width: 960px) and (max-width: 1199px) {
   .VPHero .VPImage {
     max-width: 400px !important;
