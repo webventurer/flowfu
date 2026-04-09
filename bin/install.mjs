@@ -122,6 +122,69 @@ function copyExampleFiles() {
   }
 }
 
+const LINEAR_OAUTH = {
+  linear: {
+    command: "npx",
+    args: ["-y", "mcp-remote", "https://mcp.linear.app/mcp"],
+  },
+};
+
+const LINEAR_API_KEY = {
+  "linear-org1": {
+    command: "npx",
+    args: [
+      "-y",
+      "mcp-remote",
+      "https://mcp.linear.app/mcp",
+      "--header",
+      "Authorization:Bearer ${LINEAR_ORG1_API_KEY}",
+    ],
+    env: { LINEAR_ORG1_API_KEY: "${LINEAR_ORG1_API_KEY}" },
+  },
+  "linear-org2": {
+    command: "npx",
+    args: [
+      "-y",
+      "mcp-remote",
+      "https://mcp.linear.app/mcp",
+      "--header",
+      "Authorization:Bearer ${LINEAR_ORG2_API_KEY}",
+    ],
+    env: { LINEAR_ORG2_API_KEY: "${LINEAR_ORG2_API_KEY}" },
+  },
+};
+
+function isApiKey(method) {
+  return method === "api" || method === "apikey";
+}
+
+function readMcpConfig(path) {
+  if (!existsSync(path)) return { mcpServers: {} };
+  const config = JSON.parse(readFileSync(path, "utf8"));
+  config.mcpServers = config.mcpServers || {};
+  return config;
+}
+
+function writeMcpConfig(path, config) {
+  writeFileSync(path, `${JSON.stringify(config, null, 2)}\n`);
+}
+
+async function configureMcp() {
+  const method = await ask(
+    "Linear: OAuth (single org) or API key (multiple orgs)? (oauth/api) ",
+  );
+  const servers = isApiKey(method) ? LINEAR_API_KEY : LINEAR_OAUTH;
+  const mcpPath = join(destRoot, ".mcp.json");
+  const config = readMcpConfig(mcpPath);
+  deepMerge(config.mcpServers, servers);
+  writeMcpConfig(mcpPath, config);
+  console.log(
+    isApiKey(method)
+      ? "Configured Linear MCP (API key — add LINEAR_ORG1_API_KEY and LINEAR_ORG2_API_KEY to ~/.env)"
+      : "Configured Linear MCP (OAuth — browser login on first use)",
+  );
+}
+
 function mergeSettings() {
   const settingsPath = join(destRoot, ".claude/settings.json");
   mkdirSync(dirname(settingsPath), { recursive: true });
@@ -147,7 +210,10 @@ async function main() {
   console.log("  .claude/hooks/             (commit hook scripts)");
   console.log("  .claude/docs/              (supporting documentation)");
   console.log("  tools/                     (cross-model feedback script)");
-  console.log("  .mcp.json.example          (Linear MCP server template)");
+  console.log("  .mcp.json.example          (Linear MCP server reference)");
+
+  // Configure Linear MCP
+  await configureMcp();
 
   // Merge settings
   const settingsPath = join(destRoot, ".claude/settings.json");
