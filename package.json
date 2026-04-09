@@ -27,7 +27,7 @@
     "workflow"
   ],
   "devDependencies": {
-    "@biomejs/biome": "^2.4.6",
+    "@biomejs/biome": "^2.4.10",
     "vitepress": "^1.6.4"
   },
   "license": "MIT",
