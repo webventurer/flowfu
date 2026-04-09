@@ -9,7 +9,7 @@ This copies skills, commands, hooks, and tools into your project's `.claude/` di
 ## Uninstall
 
 ```bash
-npx github:webventurer/flowfu-uninstall
+npx -p github:webventurer/flowfu flowfu-uninstall
 ```
 
 This removes all copied directories, the example file, and strips the flowfu hook from `.claude/settings.json`. Your `.mcp.json` is left untouched — remove Linear servers manually if needed.

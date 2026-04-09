@@ -5,6 +5,11 @@ import { join } from "node:path";
 
 const destRoot = process.cwd();
 
+if (existsSync(join(destRoot, "bin/install.mjs"))) {
+  console.error("Cannot uninstall from the flowfu repo itself.");
+  process.exit(1);
+}
+
 const DIRS = [
   ".claude/skills/commit",
   ".claude/skills/craft",
