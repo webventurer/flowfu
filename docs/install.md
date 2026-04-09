@@ -6,6 +6,14 @@ npx github:webventurer/flowfu
 
 This copies skills, commands, hooks, and tools into your project's `.claude/` directory and merges hook config into your existing `settings.json`.
 
+## Uninstall
+
+```bash
+npx github:webventurer/flowfu-uninstall
+```
+
+This removes all copied directories, the example file, and strips the flowfu hook from `.claude/settings.json`. Your `.mcp.json` is left untouched — remove Linear servers manually if needed.
+
 ## Requirements
 
 ### Claude Code
