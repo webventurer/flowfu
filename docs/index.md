@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: stride
-  text: Build apps that don't break in 3 days
-  tagline: "Agents do the work.<br>The Kanban board keeps order.<br>You control the flow."
+  text: Build apps that go the distance
+  tagline: "Agents do the work.<br>The Kanban board keeps order.<br>You set the pace."
   image:
     src: /stride-hero.svg
     alt: stride — cards flowing through a Kanban board
