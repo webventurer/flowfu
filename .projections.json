@@ -1,10 +1,10 @@
 {
-  "mylib/*.py": {
+  "stride/*.py": {
     "type": "python",
     "alternate": "tests/{dirname}/test_{basename}.py"
   },
   "tests/**/test_*.py": {
     "type": "test",
-    "alternate": "mylib/{}.py"
+    "alternate": "stride/{}.py"
   }
 }

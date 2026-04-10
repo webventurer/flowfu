@@ -4,11 +4,11 @@
   "reportUnnecessaryComparison": "error",
   "typeCheckingMode": "standard",
   "include": [
-    "mylib",
+    "stride",
     "tests"
   ],
   "extraPaths": [
-    "./mylib"
+    "./stride"
   ],
   "venv": ".venv",
   "venvPath": "."

@@ -4,4 +4,4 @@ import sys
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, project_root)
 
-from mylib import *  # noqa: E402, F403
+from stride import *  # noqa: E402, F403
