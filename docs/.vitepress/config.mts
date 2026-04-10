@@ -36,6 +36,7 @@ export default defineConfig({
         items: [
           { text: 'Agentic engineering', link: '/reference/agentic-engineering' },
           { text: 'Kanban process', link: '/reference/kanban' },
+          { text: 'Issue statuses', link: '/reference/issue-statuses' },
           { text: 'Issue template', link: '/reference/issue-template' },
           { text: 'Chris Beams commit style', link: '/reference/commit-style' },
         ],

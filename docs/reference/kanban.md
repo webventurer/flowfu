@@ -4,6 +4,8 @@ Kanban is a workflow management method that visualises work as cards moving acro
 
 ![Kanban board](/kanban-board.svg)
 
+See [Issue statuses](/reference/issue-statuses) for how to configure these columns in Linear.
+
 ## The columns
 
 | Column | Purpose | Entry rule | Exit rule |
