@@ -44,7 +44,9 @@ def main(
     target_issues = fetch_target_issues(target_key, target_team, target_project)
 
     for card in cards:
-        migrate_card_images(source_key, target_key, target_issues, card, dry_run)
+        migrate_card_images(
+            source_key, target_key, target_issues, card, dry_run
+        )
 
 
 def report_image_count(cards: list):
@@ -53,12 +55,18 @@ def report_image_count(cards: list):
 
 
 def migrate_card_images(
-    source_key: str, target_key: str, target_issues: list, card: dict, dry_run: bool
+    source_key: str,
+    target_key: str,
+    target_issues: list,
+    card: dict,
+    dry_run: bool,
 ):
     signed = fetch_signed_urls(source_key, card["id"])
     url_map = migrate_all_images(target_key, card["images"], signed, dry_run)
     if url_map and not dry_run:
-        append_images_to_issue(target_key, target_issues, card["title"], url_map)
+        append_images_to_issue(
+            target_key, target_issues, card["title"], url_map
+        )
 
 
 def load_cards_with_images(export_dir: Path) -> list:
@@ -100,7 +108,12 @@ def migrate_all_images(
 
 
 def migrate_one_image(
-    target_key: str, alt: str, old_url: str, signed: dict, dry_run: bool, url_map: dict
+    target_key: str,
+    alt: str,
+    old_url: str,
+    signed: dict,
+    dry_run: bool,
+    url_map: dict,
 ):
     signed_url = signed.get(url_path(old_url))
     if not signed_url:

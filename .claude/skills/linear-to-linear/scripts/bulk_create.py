@@ -16,7 +16,12 @@ from linear_api import graphql, require_env, resolve_by_name, resolve_states
 @click.option("--export-dir", default=None, type=click.Path(exists=True))
 @click.option("--dry-run", is_flag=True, default=False)
 def main(
-    cards_dir: str, api_key_env: str, team: str, project: str, export_dir: str, dry_run: bool
+    cards_dir: str,
+    api_key_env: str,
+    team: str,
+    project: str,
+    export_dir: str,
+    dry_run: bool,
 ):
     api_key = require_env(api_key_env)
     team_id = resolve_by_name(api_key, "teams", team)
@@ -241,7 +246,9 @@ def create_project_update(api_key: str, project_id: str, update: dict) -> bool:
         "health": update["health"],
         "body": update["body"],
     }
-    data = graphql(api_key, CREATE_UPDATE_QUERY, variables={"input": input_data})
+    data = graphql(
+        api_key, CREATE_UPDATE_QUERY, variables={"input": input_data}
+    )
     success = data.get("data", {}).get("projectUpdateCreate", {}).get("success")
     icon = "✓" if success else "✗"
     click.echo(f"  {icon} update: {update['health']} — {update['body'][:50]}")
@@ -263,7 +270,9 @@ def create_project_link(api_key: str, project_id: str, link: dict) -> bool:
         "label": link["label"],
     }
     data = graphql(api_key, CREATE_LINK_QUERY, variables={"input": input_data})
-    success = data.get("data", {}).get("entityExternalLinkCreate", {}).get("success")
+    success = (
+        data.get("data", {}).get("entityExternalLinkCreate", {}).get("success")
+    )
     icon = "✓" if success else "✗"
     click.echo(f"  {icon} link: {link['label']} → {link['url']}")
     return bool(success)

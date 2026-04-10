@@ -50,11 +50,15 @@ def main(match_report: str, team: str, project: str, state_map: str, mode: str):
     if creates:
         validate_states(creates, list_to_state)
     if not updates and not creates:
-        click.echo("Nothing to do — all matched issues already have descriptions.")
+        click.echo(
+            "Nothing to do — all matched issues already have descriptions."
+        )
         return
 
     out_dir = prepare_output_dir(match_report)
-    write_all_payloads(updates + creates, team, project, list_to_state, out_dir, mode)
+    write_all_payloads(
+        updates + creates, team, project, list_to_state, out_dir, mode
+    )
     report_summary(updates, creates, out_dir, mode)
 
 
@@ -66,7 +70,9 @@ def split_by_action(report: list) -> tuple:
 
 def require_team_for_creates(creates: list, team: str):
     if creates and not team:
-        raise click.UsageError("--team is required when match report contains creates")
+        raise click.UsageError(
+            "--team is required when match report contains creates"
+        )
 
 
 def prepare_output_dir(match_report: str) -> Path:
@@ -76,7 +82,12 @@ def prepare_output_dir(match_report: str) -> Path:
 
 
 def write_all_payloads(
-    entries: list, team: str, project: str, list_to_state: dict, out_dir: Path, mode: str
+    entries: list,
+    team: str,
+    project: str,
+    list_to_state: dict,
+    out_dir: Path,
+    mode: str,
 ):
     for i, entry in enumerate(entries):
         payload = build_payload(entry, team, project, list_to_state)
@@ -86,7 +97,9 @@ def write_all_payloads(
 
 def report_summary(updates: list, creates: list, out_dir: Path, mode: str):
     prefix = "[DRY RUN] " if mode == "dry-run" else ""
-    click.echo(f"\n{prefix}{len(updates)} updates, {len(creates)} creates written to {out_dir}/")
+    click.echo(
+        f"\n{prefix}{len(updates)} updates, {len(creates)} creates written to {out_dir}/"
+    )
     if mode == "dry-run":
         click.echo("Run with --apply to push to Linear via the agent.")
 

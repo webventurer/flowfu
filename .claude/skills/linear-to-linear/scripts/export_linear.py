@@ -188,7 +188,9 @@ def fetch_project_meta(api_key: str, project_id: str) -> dict:
 
 def extract_updates(meta: dict) -> list:
     updates = meta["projectUpdates"]["nodes"]
-    return sorted([update_record(u) for u in updates], key=lambda u: u["createdAt"])
+    return sorted(
+        [update_record(u) for u in updates], key=lambda u: u["createdAt"]
+    )
 
 
 def update_record(n: dict) -> dict:
@@ -232,7 +234,9 @@ def write_grouped(grouped: dict, out: Path):
         write_json(out / f"{i:02d}-{slug}.json", group)
 
 
-def write_summary(grouped: dict, issues: list, updates: list, links: list, out: Path):
+def write_summary(
+    grouped: dict, issues: list, updates: list, links: list, out: Path
+):
     def count(items, field):
         return sum(1 for i in items if i[field])
 
