@@ -39,6 +39,7 @@ export default defineConfig({
           { text: 'Issue statuses', link: '/reference/issue-statuses' },
           { text: 'Issue template', link: '/reference/issue-template' },
           { text: 'Chris Beams commit style', link: '/reference/commit-style' },
+          { text: 'Migration skills', link: '/reference/migration-skills' },
         ],
       },
     ],
