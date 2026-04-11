@@ -47,7 +47,7 @@ All scripts live in `scripts/` and follow the `/script` skill conventions.
 | `export_trello.py` | Export | Pulls all cards from a Trello board (including archived lists) — descriptions, comments, checklists — writes one JSON per list |
 | `match.py` | Match | Reads Trello export + Linear issues, matches by title (exact → normalised → fuzzy), writes match report |
 | `check_states.py` | Check | Validates that all mapped state names exist in the target Linear workspace. Run before upsert |
-| `update_linear.py` | Upsert | Reads match report, updates existing issues and creates missing ones. `--dry-run` by default |
+| `update_linear.py` | Upsert | Reads match report and talks to Linear directly via `tools/linear_client.py`. `--dry-run` (default) writes inspection payloads to `cards/`; `--apply` calls Linear |
 | `verify.py` | Verify | Compares Trello export against Linear issues — checks counts, titles, order, and descriptions |
 
 ### Running
@@ -63,7 +63,7 @@ python scripts/match.py --trello-dir /tmp/trello-export --linear-file /tmp/linea
 
 # Phase 3: Upsert Linear (dry-run first, then apply)
 python scripts/update_linear.py --match-report /tmp/trello-export/match-report.json --team Wordtracker --project "What's next (archive)" --dry-run
-python scripts/update_linear.py --match-report /tmp/trello-export/match-report.json --team Wordtracker --project "What's next (archive)" --apply
+python scripts/update_linear.py --match-report /tmp/trello-export/match-report.json --api-key-env LINEAR_WORDTRACKER_API_KEY --team Wordtracker --project "What's next (archive)" --apply
 
 # Phase 4: Verify
 python scripts/verify.py --trello-dir /tmp/trello-export --linear-file /tmp/linear-issues.json
@@ -76,8 +76,7 @@ python scripts/verify.py --trello-dir /tmp/trello-export --linear-file /tmp/line
 - `requests` — Trello REST API calls
 - `click` — CLI parameters
 - `difflib` — fuzzy title matching (stdlib)
-
-The Linear API is accessed via MCP tools (not direct HTTP), so the update script delegates to Claude via match report files rather than calling Linear directly. The agent reads the match report and calls `mcp__linear-*__save_issue` for each update.
+- `tools/linear_client.py` — shared Linear GraphQL helpers, imported via `scripts/_bootstrap.py` (same pattern as `linear-to-linear`). `update_linear.py --apply` and `check_states.py` both call Linear directly through this client — no MCP round-trip.
 
 ---
 

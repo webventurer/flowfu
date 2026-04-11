@@ -86,21 +86,16 @@ python scripts/match.py --trello-dir /tmp/trello-export --linear-file /tmp/linea
 3. Apply when satisfied
 
 ```bash
-# Dry-run
+# Dry-run — writes inspection payloads to /tmp/trello-export/cards/
 python scripts/update_linear.py --match-report /tmp/trello-export/match-report.json --team Wordtracker --project "What's next (archive)" --dry-run
 
-# Apply
-python scripts/update_linear.py --match-report /tmp/trello-export/match-report.json --team Wordtracker --project "What's next (archive)" --apply
+# Apply — calls Linear directly via tools/linear_client.py
+python scripts/update_linear.py --match-report /tmp/trello-export/match-report.json --api-key-env LINEAR_WORDTRACKER_API_KEY --team Wordtracker --project "What's next (archive)" --apply
 ```
 
-The script outputs one JSON file per card in `cards/` (e.g. `000.json`, `001.json`). The agent reads these and calls `mcp__linear-*__save_issue` for each — updates push descriptions, creates make new issues.
+In **dry-run** mode, `update_linear.py` writes one JSON payload per card to `cards/` next to the match report (e.g. `000.json`, `001.json`). These are for human inspection — review them before running `--apply`.
 
-### Sequential vs parallel
-
-Ask the user which mode to use:
-
-- **Sequential** — one agent processes all cards in order. Preserves card order via creation timestamp. Slower, and may hit context limits on large boards (agent ran out at ~140 cards). Use when card order within a Linear status matters.
-- **Parallel** — multiple agents process card ranges concurrently (e.g. 0–99, 100–199, 200–299, 300–404). Much faster, but cards from different ranges interleave timestamps. Use when order doesn't matter (e.g. archived boards).
+In **apply** mode, the script calls Linear directly via `tools/linear_client.py` — resolving team, project, and state IDs up front, then calling `update_issue` / `create_issue` for each entry. No agent round-trip, no `cards/` artefacts. `--api-key-env` is required in this mode.
 
 ---
 

@@ -4,7 +4,9 @@ import json
 from pathlib import Path
 
 import click
-from linear_api import graphql, require_env, resolve_by_name
+
+import _bootstrap  # noqa: F401
+from linear_client import require_env, resolve_by_name, resolve_states
 
 
 @click.command()
@@ -19,9 +21,9 @@ from linear_api import graphql, require_env, resolve_by_name
 def main(target_api_key_env: str, target_team: str, state_map: str):
     api_key = require_env(target_api_key_env)
     mapped_states = set(json.loads(Path(state_map).read_text()).values())
-    target_states = fetch_target_states(api_key, target_team)
-    target_names = {s["name"] for s in target_states}
-    missing = mapped_states - target_names
+    team_id = resolve_by_name(api_key, "teams", target_team)
+    target_states = resolve_states(api_key, team_id)
+    missing = mapped_states - set(target_states)
 
     report(mapped_states, target_states, missing)
 
@@ -29,19 +31,7 @@ def main(target_api_key_env: str, target_team: str, state_map: str):
         raise SystemExit(1)
 
 
-STATES_QUERY = """{{ workflowStates(filter: {{ team: {{ id: {{ eq: "{team_id}" }} }} }}) {{
-    nodes {{ name type }}
-}} }}"""
-
-
-def fetch_target_states(api_key: str, team: str) -> list:
-    team_id = resolve_by_name(api_key, "teams", team)
-    return graphql(api_key, STATES_QUERY.format(team_id=team_id))["data"][
-        "workflowStates"
-    ]["nodes"]
-
-
-def report(mapped: set, target: list, missing: set):
+def report(mapped: set, target: dict, missing: set):
     click.echo("Mapped states:")
     for name in sorted(mapped):
         marker = "✗" if name in missing else "✓"
@@ -55,8 +45,8 @@ def report(mapped: set, target: list, missing: set):
     for name in sorted(missing):
         click.echo(f"  - {name}")
     click.echo("\nTarget has:")
-    for s in sorted(target, key=lambda x: x["name"]):
-        click.echo(f"  {s['name']} ({s['type']})")
+    for name in sorted(target):
+        click.echo(f"  {name} ({target[name]['type']})")
 
 
 if __name__ == "__main__":
