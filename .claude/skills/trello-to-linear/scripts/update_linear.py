@@ -12,7 +12,7 @@ from pathlib import Path
 
 import click
 
-import _bootstrap  # noqa: F401
+import bootstrap  # noqa: F401
 from linear_client import (
     LinearError,
     create_issue,

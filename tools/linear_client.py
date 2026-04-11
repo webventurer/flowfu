@@ -32,42 +32,42 @@ def graphql(
         body["variables"] = variables
     for attempt in range(retries):
         try:
-            return _post_and_check(api_key, body, query)
+            return post_and_check(api_key, body, query)
         except (requests.ConnectionError, requests.Timeout) as e:
             if attempt == retries - 1:
                 raise LinearError(
-                    f"connection failed after {retries} attempts on {_operation_name(query)}: {e}"
+                    f"connection failed after {retries} attempts on {operation_name(query)}: {e}"
                 ) from e
             time.sleep(2**attempt)
 
 
-def _post_and_check(api_key: str, body: dict, query: str) -> dict:
+def post_and_check(api_key: str, body: dict, query: str) -> dict:
     resp = requests.post(
         API_URL,
         json=body,
         headers={"Authorization": api_key, "Content-Type": "application/json"},
     )
-    _raise_for_http(resp, query)
+    raise_for_http(resp, query)
     data = resp.json()
-    _raise_for_graphql_errors(data, query)
+    raise_for_graphql_errors(data, query)
     return data
 
 
-def _raise_for_http(resp: requests.Response, query: str):
+def raise_for_http(resp: requests.Response, query: str):
     if resp.status_code >= 400:
         raise LinearError(
-            f"HTTP {resp.status_code} on {_operation_name(query)}: {resp.text[:200]}"
+            f"HTTP {resp.status_code} on {operation_name(query)}: {resp.text[:200]}"
         )
 
 
-def _raise_for_graphql_errors(data: dict, query: str):
+def raise_for_graphql_errors(data: dict, query: str):
     errors = data.get("errors")
     if errors:
         msgs = "; ".join(e.get("message", "?") for e in errors)
-        raise LinearError(f"GraphQL errors on {_operation_name(query)}: {msgs}")
+        raise LinearError(f"GraphQL errors on {operation_name(query)}: {msgs}")
 
 
-def _operation_name(query: str) -> str:
+def operation_name(query: str) -> str:
     match = re.search(r"(?:mutation|query)\s*(\w+)?\s*[\(\{]", query)
     if match and match.group(1):
         return match.group(1)
@@ -183,7 +183,7 @@ def list_issues(
 ) -> list:
     issues, cursor = [], None
     while True:
-        query = _list_issues_query(team_id, project_id, cursor)
+        query = list_issues_query(team_id, project_id, cursor)
         page = graphql(api_key, query)["data"]["issues"]
         issues.extend(page["nodes"])
         if not page["pageInfo"]["hasNextPage"]:
@@ -191,15 +191,15 @@ def list_issues(
         cursor = page["pageInfo"]["endCursor"]
 
 
-def _list_issues_query(
+def list_issues_query(
     team_id: str | None, project_id: str | None, cursor: str | None
 ) -> str:
-    filters = _issue_filters(team_id, project_id)
+    filters = issue_filters(team_id, project_id)
     after = f', after: "{cursor}"' if cursor else ""
     return LIST_ISSUES_QUERY.format(filters=filters, after=after)
 
 
-def _issue_filters(team_id: str | None, project_id: str | None) -> str:
+def issue_filters(team_id: str | None, project_id: str | None) -> str:
     parts = []
     if team_id:
         parts.append(f'team: {{ id: {{ eq: "{team_id}" }} }}')
@@ -397,10 +397,10 @@ def list_projects(api_key: str, team_id: str | None = None) -> list:
         if not page["pageInfo"]["hasNextPage"]:
             break
         cursor = page["pageInfo"]["endCursor"]
-    return _filter_by_team(projects, team_id) if team_id else projects
+    return filter_by_team(projects, team_id) if team_id else projects
 
 
-def _filter_by_team(projects: list, team_id: str) -> list:
+def filter_by_team(projects: list, team_id: str) -> list:
     return [
         p
         for p in projects
@@ -426,10 +426,10 @@ def list_labels(api_key: str, team_id: str | None = None) -> list:
         if not page["pageInfo"]["hasNextPage"]:
             break
         cursor = page["pageInfo"]["endCursor"]
-    return _labels_for_team(labels, team_id) if team_id else labels
+    return labels_for_team(labels, team_id) if team_id else labels
 
 
-def _labels_for_team(labels: list, team_id: str) -> list:
+def labels_for_team(labels: list, team_id: str) -> list:
     return [
         lbl
         for lbl in labels
