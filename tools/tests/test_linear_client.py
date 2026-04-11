@@ -4,8 +4,8 @@ Most tests hit a real Linear API and are gated by LINEAR_E2E=1. The
 error-handling test is mocked and runs unconditionally.
 
 Run with:
-    python -m pytest .claude/skills/linear-to-linear/tests/
-    LINEAR_E2E=1 python -m pytest .claude/skills/linear-to-linear/tests/
+    python -m pytest tools/tests/
+    LINEAR_E2E=1 python -m pytest tools/tests/
 """
 
 import os
@@ -16,9 +16,9 @@ from unittest.mock import patch
 
 import pytest
 
-# Add the scripts directory to the path so we can import linear_client
-SCRIPTS_DIR = Path(__file__).parent.parent / "scripts"
-sys.path.insert(0, str(SCRIPTS_DIR))
+# Add the tools directory to the path so we can import linear_client
+TOOLS_DIR = Path(__file__).parent.parent
+sys.path.insert(0, str(TOOLS_DIR))
 
 from linear_client import (  # noqa: E402
     LinearError,
