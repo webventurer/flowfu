@@ -53,7 +53,7 @@ live_only = pytest.mark.skipif(
 )
 
 
-def _suffix() -> str:
+def suffix() -> str:
     return uuid.uuid4().hex[:8]
 
 
@@ -75,7 +75,7 @@ def state_id(api_key, team_id):
 
 @pytest.fixture
 def scratch_project(api_key, team_id):
-    name = f"sdk-test-project-{_suffix()}"
+    name = f"sdk-test-project-{suffix()}"
     project_id = create_project(
         api_key,
         team_id,
@@ -92,7 +92,7 @@ def scratch_project(api_key, team_id):
 
 @live_only
 def test_create_and_delete_issue(api_key, team_id, scratch_project, state_id):
-    title = f"sdk-test-issue-{_suffix()}"
+    title = f"sdk-test-issue-{suffix()}"
     issue_id = create_issue(
         api_key,
         team_id=team_id,
@@ -110,7 +110,7 @@ def test_create_and_delete_issue(api_key, team_id, scratch_project, state_id):
 
 @live_only
 def test_create_project_with_fields(api_key, team_id):
-    name = f"sdk-test-project-fields-{_suffix()}"
+    name = f"sdk-test-project-fields-{suffix()}"
     project_id = create_project(
         api_key, team_id, name=name, description="short", content="## long"
     )
@@ -149,7 +149,7 @@ def test_create_project_link(api_key, scratch_project):
 
 @live_only
 def test_create_and_delete_label(api_key):
-    name = f"sdk-test-label-{_suffix()}"
+    name = f"sdk-test-label-{suffix()}"
     label_id = create_label(api_key, name=name, color="#ff00ff")
     try:
         assert isinstance(label_id, str)
@@ -159,7 +159,7 @@ def test_create_and_delete_label(api_key):
 
 @live_only
 def test_update_issue(api_key, team_id, scratch_project, state_id):
-    title = f"sdk-test-update-{_suffix()}"
+    title = f"sdk-test-update-{suffix()}"
     issue_id = create_issue(
         api_key,
         team_id=team_id,
@@ -185,7 +185,7 @@ def test_update_issue(api_key, team_id, scratch_project, state_id):
 def test_list_issues_filters_by_project(
     api_key, team_id, scratch_project, state_id
 ):
-    title = f"sdk-test-list-{_suffix()}"
+    title = f"sdk-test-list-{suffix()}"
     issue_id = create_issue(
         api_key,
         team_id=team_id,
@@ -212,7 +212,7 @@ def test_list_projects_returns_projects(api_key):
 
 @live_only
 def test_list_labels_returns_labels(api_key):
-    name = f"sdk-test-label-{_suffix()}"
+    name = f"sdk-test-label-{suffix()}"
     label_id = create_label(api_key, name=name, color="#00ff00")
     try:
         labels = list_labels(api_key)
@@ -223,7 +223,7 @@ def test_list_labels_returns_labels(api_key):
 
 @live_only
 def test_create_attachment(api_key, team_id, scratch_project, state_id):
-    title = f"sdk-test-issue-att-{_suffix()}"
+    title = f"sdk-test-issue-att-{suffix()}"
     issue_id = create_issue(
         api_key,
         team_id=team_id,

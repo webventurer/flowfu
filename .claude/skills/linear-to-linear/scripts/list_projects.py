@@ -2,7 +2,7 @@
 
 import click
 
-import _bootstrap  # noqa: F401
+import bootstrap  # noqa: F401
 from linear_client import list_projects, require_env
 
 
