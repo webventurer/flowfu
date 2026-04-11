@@ -7,6 +7,7 @@ from pathlib import Path
 import click
 import requests
 
+import _bootstrap  # noqa: F401
 from linear_client import (
     LinearError,
     graphql,

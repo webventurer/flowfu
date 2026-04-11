@@ -4,7 +4,9 @@ import json
 from pathlib import Path
 
 import click
-from linear_api import graphql, require_env, resolve_by_name
+
+import _bootstrap  # noqa: F401
+from linear_client import graphql, require_env, resolve_by_name
 
 
 @click.command()
