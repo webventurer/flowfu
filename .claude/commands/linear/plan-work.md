@@ -114,9 +114,9 @@ uv run tools/openrouter-chat.py "<full draft text + Claude assessment>" -m opena
 
 3. **Claude responds** — after the user has seen ChatGPT's feedback, review it against the draft. Incorporate points that strengthen the issue, push back on points that don't fit or expand scope unnecessarily. Explain your reasoning for each decision. Present the updated draft.
 
-4. **User decides** — ask: **"Send to ChatGPT again, or exit the loop?"**
+4. **User decides** — ask: **"Send to ChatGPT again or save the issue on Linear?"**
    - If **again** — repeat from step 1 with the revised draft
-   - If **exit** — continue to step 8
+   - If **save** — continue to step 8
 
 Each round has three voices: Claude proposes and synthesises, ChatGPT challenges, the user steers. The loop sharpens the issue through cross-model perspectives — like a design review but for issue planning.
 
