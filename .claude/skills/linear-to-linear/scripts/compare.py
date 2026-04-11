@@ -27,7 +27,8 @@ def main(
     fix: bool,
 ):
     target_key = require_env(target_api_key_env)
-    cards = json.loads((Path(export_dir) / "all_cards.json").read_text())
+    export_path = Path(export_dir)
+    cards = json.loads((export_path / "all_cards.json").read_text())
     target_by_title = {
         i["title"]: i
         for i in fetch_issues(target_key, target_team, target_project)
@@ -37,6 +38,9 @@ def main(
         p for card in cards if (p := compare_one(card, target_by_title))
     ]
     report_problems(problems)
+
+    meta_problems = compare_project_meta(target_key, target_project, export_path)
+    report_meta_problems(meta_problems)
 
     if fix and problems:
         fix_problems(target_key, problems)
@@ -154,6 +158,75 @@ def fix_problems(target_key: str, problems: list):
         if fixed % 10 == 0:
             time.sleep(0.5)
     click.echo(f"\nFixed {fixed}/{len(problems)}")
+
+
+PROJECT_META_QUERY = """{{
+    projects(filter: {{ name: {{ eq: "{project}" }} }}) {{
+        nodes {{
+            name description content
+            projectUpdates(first: 50) {{ nodes {{ body health }} }}
+            externalLinks {{ nodes {{ label url }} }}
+        }}
+    }}
+}}"""
+
+
+def fetch_target_project_meta(api_key: str, project: str) -> dict | None:
+    data = graphql(api_key, PROJECT_META_QUERY.format(project=project))
+    nodes = data["data"]["projects"]["nodes"]
+    return nodes[0] if nodes else None
+
+
+def load_json_file(path: Path) -> list | dict:
+    return json.loads(path.read_text()) if path.exists() else []
+
+
+def compare_project_meta(
+    api_key: str, project: str, export_dir: Path
+) -> list:
+    target = fetch_target_project_meta(api_key, project)
+    if not target:
+        return [f"target project '{project}' not found"]
+
+    source_info = load_json_file(export_dir / "project.json") or {}
+    source_updates = load_json_file(export_dir / "project_updates.json")
+    source_links = load_json_file(export_dir / "project_links.json")
+
+    return [
+        *compare_project_fields(source_info, target),
+        *compare_project_updates(source_updates, target),
+        *compare_project_links(source_links, target),
+    ]
+
+
+def compare_project_fields(source: dict, target: dict) -> list:
+    problems = []
+    if source.get("description", "") != (target.get("content") or ""):
+        problems.append("project description differs from source")
+    if source.get("summary", "") != (target.get("description") or ""):
+        problems.append("project summary differs from source")
+    return problems
+
+
+def compare_project_updates(source: list, target: dict) -> list:
+    target_bodies = {u["body"] for u in target["projectUpdates"]["nodes"]}
+    missing = [u["body"][:60] for u in source if u["body"] not in target_bodies]
+    return [f"missing project update: {body}" for body in missing]
+
+
+def compare_project_links(source: list, target: dict) -> list:
+    target_urls = {ln["url"] for ln in target["externalLinks"]["nodes"]}
+    missing = [ln for ln in source if ln["url"] not in target_urls]
+    return [f"missing resource link: {ln['label']} → {ln['url']}" for ln in missing]
+
+
+def report_meta_problems(problems: list):
+    if not problems:
+        click.echo("PASS: project description, updates, and links match source")
+        return
+    click.echo(f"\nProject metadata problems ({len(problems)}):")
+    for p in problems:
+        click.echo(f"  - {p}")
 
 
 if __name__ == "__main__":

@@ -24,6 +24,7 @@ def main(api_key_env: str, project: str, team: str, output: str):
     fetch_comments(api_key, issues)
     states = fetch_states(api_key, team)
     meta = fetch_project_meta(api_key, project_id)
+    project_info = extract_project_info(meta)
     updates = extract_updates(meta)
     links = extract_links(meta)
 
@@ -31,6 +32,7 @@ def main(api_key_env: str, project: str, team: str, output: str):
 
     write_json(out / "all_cards.json", issues)
     write_json(out / "states.json", states)
+    write_json(out / "project.json", project_info)
     write_json(out / "project_updates.json", updates)
     write_json(out / "project_links.json", links)
     write_labels(out, labels)
@@ -171,6 +173,7 @@ def resolve_project_id(api_key: str, project: str) -> str:
 
 PROJECT_META_QUERY = """{{
     project(id: "{project_id}") {{
+        name description content
         projectUpdates(first: 50) {{
             nodes {{ id body health createdAt user {{ name }} }}
         }}
@@ -184,6 +187,14 @@ PROJECT_META_QUERY = """{{
 def fetch_project_meta(api_key: str, project_id: str) -> dict:
     data = graphql(api_key, PROJECT_META_QUERY.format(project_id=project_id))
     return data["data"]["project"]
+
+
+def extract_project_info(meta: dict) -> dict:
+    return {
+        "name": meta.get("name", ""),
+        "summary": meta.get("description") or "",
+        "description": meta.get("content") or "",
+    }
 
 
 def extract_updates(meta: dict) -> list:
