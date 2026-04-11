@@ -12,11 +12,11 @@
 
 Ask: *"Which Linear workspace are you migrating FROM (source)?"*
 
-Offer the available Linear MCP servers as options (e.g. `linear-personal`, `linear-wordtracker`). Derive the API key env var from the workspace name (e.g. `linear-personal` → `LINEAR_PLAYGROUND_API_KEY`). Confirm the env var with the user.
+Offer the available workspaces as options by API key env var (e.g. `LINEAR_PERSONAL_API_KEY`, `LINEAR_PLAYGROUND_API_KEY`, `LINEAR_WEBVENTURER_API_KEY`). Confirm the choice with the user.
 
 ### Step 2: Ask for source project
 
-Use the source MCP server to call `list_projects` and present the project names as options.
+Run `python scripts/list_projects.py --api-key-env <SOURCE_API_KEY_ENV>` and present the project names (and teams) as options.
 
 Ask: *"Which project are you migrating FROM?"*
 
@@ -26,11 +26,11 @@ Record the project name and its team.
 
 Ask: *"Which Linear workspace are you migrating TO (target)?"*
 
-Offer the remaining Linear MCP servers as options. Derive the API key env var and confirm with the user.
+Offer the remaining workspaces as options. Confirm the env var with the user.
 
 ### Step 4: Ask for target project
 
-Use the target MCP server to call `list_projects` and present the project names as options.
+Run `python scripts/list_projects.py --api-key-env <TARGET_API_KEY_ENV>` and present the project names (and teams) as options.
 
 Ask: *"Which project are you migrating TO? (Select 'Other' to create a new one)"*
 
@@ -90,14 +90,21 @@ cat /tmp/linear-export/SUMMARY.md
 
 ---
 
-## Phase 1.5: Verify target project and states
+## Phase 1.5: Ensure target project and verify states
 
-**Goal**: Confirm the target project exists and the target workspace has all the source workflow states.
+**Goal**: Create or update the target project with the source description and summary, then confirm the target workspace has all the source workflow states.
 
-1. Call `mcp__linear-<target>__list_projects` with the project name
-2. If not found, create it or stop
-3. **Copy project description** — call `mcp__linear-<source>__get_project` to fetch the full description and summary, then update the target project with `mcp__linear-<target>__save_project` passing the `id`, `description`, and `summary`
-4. **Check states** — compare source states against the target:
+1. **Ensure project** — creates the target project if it does not exist, or updates its description/summary if it does. Uses `project.json` from the export:
+
+```bash
+python scripts/ensure_project.py \
+  --api-key-env <TARGET_API_KEY_ENV> \
+  --team <TARGET_TEAM> \
+  --project "<TARGET_PROJECT>" \
+  --export-dir /tmp/linear-export
+```
+
+2. **Check states** — compare source states against the target:
 
 ```bash
 python scripts/check_states.py \
@@ -106,7 +113,7 @@ python scripts/check_states.py \
   --export-dir /tmp/linear-export
 ```
 
-5. If any source states are missing, ask the user to rename them in the target workspace (Linear UI > Team Settings > Workflow). Re-run until all pass
+3. If any source states are missing, ask the user to rename them in the target workspace (Linear UI > Team Settings > Workflow). Re-run until all pass
 
 ---
 
@@ -114,8 +121,17 @@ python scripts/check_states.py \
 
 **Goal**: Match source issues to target issues by title.
 
-1. **Fetch target issues** via the target MCP server and save to JSON
-2. **Run `match.py`**
+1. **Fetch target issues** — writes a JSON file for `match.py`:
+
+```bash
+python scripts/fetch_target_issues.py \
+  --api-key-env <TARGET_API_KEY_ENV> \
+  --team <TARGET_TEAM> \
+  --project "<TARGET_PROJECT>" \
+  --output /tmp/linear-target-issues.json
+```
+
+2. **Run `match.py`**:
 
 ```bash
 python scripts/match.py --source-dir /tmp/linear-export --target-file /tmp/linear-target-issues.json
@@ -154,7 +170,7 @@ States are matched by exact name. Phase 1.5 ensures all source states exist in t
 
 **Goal**: Download inline images from the source workspace and re-upload to the target.
 
-Linear upload URLs (`uploads.linear.app`) are workspace-scoped. The source MCP's `get_issue` returns signed download URLs. The target workspace's `fileUpload` mutation provides presigned upload URLs.
+Linear upload URLs (`uploads.linear.app`) are workspace-scoped. The source workspace's `issue` query returns signed download URLs. The target workspace's `fileUpload` mutation provides presigned upload URLs.
 
 ```bash
 # Dry-run

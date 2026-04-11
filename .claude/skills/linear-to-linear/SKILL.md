@@ -26,7 +26,7 @@ description: Copy issues between Linear workspaces — descriptions, comments, l
 
 ## Quick reference
 
-<mark>**All scripts are self-contained in `scripts/`. Each phase has its own script — export, match, check states, check labels, create, migrate images, verify.**</mark>
+<mark>**All scripts are self-contained in `scripts/` and talk directly to the Linear GraphQL API. No MCP calls — every read and write is deterministic.** Each phase has its own script — export, ensure project, fetch target, match, check states, check labels, create, migrate images, verify, compare.</mark>
 
 ---
 
@@ -36,41 +36,46 @@ All scripts live in `scripts/` and share `linear_api.py` for GraphQL calls, retr
 
 | Script | Phase | What it does |
 |:-------|:------|:-------------|
-| `export_linear.py` | Export | Pulls all issues from a source workspace — descriptions, comments, labels, attachments, states — writes JSON per state |
+| `export_linear.py` | Export | Pulls all issues, project description/summary, project updates, and resource links from a source workspace — writes JSON per state plus `project.json`, `project_updates.json`, `project_links.json` |
+| `ensure_project.py` | Ensure project | Creates the target project from `project.json` if missing, or updates its description/summary if it exists |
+| `fetch_target_issues.py` | Fetch target | Writes target issue list to JSON for `match.py` |
 | `match.py` | Match | Reads source export + target issues, matches by title (exact → fuzzy), writes `match-report.json` + `cards/` |
 | `check_states.py` | Check states | Validates that all source workflow states exist in the target workspace. Run before create |
 | `check_labels.py` | Check labels | Validates source labels exist in target. Run with `--create` to add missing ones with matching colors |
-| `bulk_create.py` | Create | Reads `cards/`, creates issues in target with labels and attachments. Validates states upfront — fails fast if any are missing |
+| `bulk_create.py` | Create | Reads `cards/`, creates issues, project updates, and resource links in target. Validates states upfront — fails fast if any are missing |
 | `migrate_images.py` | Images | Downloads images via signed source URLs, re-uploads to target workspace |
 | `verify.py` | Verify | Compares source export against target issues — checks counts, titles, descriptions |
+| `compare.py` | Compare | End-to-end comparison: issues (description + comments + images) and project-level metadata (description, summary, updates, links) |
 
 ### Running
 
 All commands assume you are in `.claude/skills/linear-to-linear/`.
 
 ```bash
-# Phase 1: Export source issues
+# Phase 1: Export source issues and project metadata
 python scripts/export_linear.py --api-key-env LINEAR_PLAYGROUND_API_KEY --project "Wordtracker: Phase 1" --team "Playground" --output scripts/output/phase1
 
-# Phase 2: Match against target (provide target issues JSON, or empty [] for fresh project)
-python scripts/match.py --source-dir scripts/output/phase1 --target-file scripts/output/phase1/target_issues.json
+# Phase 1.5a: Ensure target project exists with source description/summary
+python scripts/ensure_project.py --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --export-dir scripts/output/phase1
 
-# Phase 3: Check states match
+# Phase 1.5b: Check states and labels
 python scripts/check_states.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --target-team "Wordtracker" --export-dir scripts/output/phase1
-
-# Phase 3b: Check labels (create missing ones)
 python scripts/check_labels.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --export-dir scripts/output/phase1
 python scripts/check_labels.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --export-dir scripts/output/phase1 --create
 
-# Phase 4: Create issues (dry-run first)
-python scripts/bulk_create.py --cards-dir scripts/output/phase1/cards --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --dry-run
-python scripts/bulk_create.py --cards-dir scripts/output/phase1/cards --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1"
+# Phase 2: Fetch target issues and match
+python scripts/fetch_target_issues.py --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --output scripts/output/phase1/target_issues.json
+python scripts/match.py --source-dir scripts/output/phase1 --target-file scripts/output/phase1/target_issues.json
 
-# Phase 5: Migrate images
+# Phase 3: Create issues, project updates, and resource links (dry-run first)
+python scripts/bulk_create.py --cards-dir scripts/output/phase1/cards --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --export-dir scripts/output/phase1 --dry-run
+python scripts/bulk_create.py --cards-dir scripts/output/phase1/cards --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --export-dir scripts/output/phase1
+
+# Phase 4: Migrate images
 python scripts/migrate_images.py --source-api-key-env LINEAR_PLAYGROUND_API_KEY --target-api-key-env LINEAR_WORDTRACKER_API_KEY --export-dir scripts/output/phase1 --target-team "Wordtracker" --target-project "Phase 1"
 
-# Phase 6: Verify
-python scripts/verify.py --source-dir scripts/output/phase1 --target-file scripts/output/phase1/target_issues.json
+# Phase 5: Compare end-to-end (issues + project metadata)
+python scripts/compare.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --target-team "Wordtracker" --target-project "Phase 1" --export-dir scripts/output/phase1
 ```
 
 ---
