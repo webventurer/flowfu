@@ -52,19 +52,21 @@ All scripts live in `scripts/` and follow the `/script` skill conventions.
 
 ### Running
 
+Pipeline artifacts go to `/tmp/trello-export` so they never touch the repo working tree — see [WORKFLOW.md](WORKFLOW.md) for the canonical walkthrough.
+
 ```bash
 # Phase 1: Export Trello board
-python scripts/export_trello.py --board-id 647a2cce8b1c202caf3cadfc --output scripts/output/whats-next
+python scripts/export_trello.py --board-id 647a2cce8b1c202caf3cadfc --output /tmp/trello-export
 
 # Phase 2: Match against Linear
-python scripts/match.py --trello-dir scripts/output/whats-next --linear-file scripts/output/whats-next/linear-issues.json
+python scripts/match.py --trello-dir /tmp/trello-export --linear-file /tmp/linear-issues.json
 
 # Phase 3: Upsert Linear (dry-run first, then apply)
-python scripts/update_linear.py --match-report scripts/output/whats-next/match-report.json --team Wordtracker --project "What's next (archive)" --dry-run
-python scripts/update_linear.py --match-report scripts/output/whats-next/match-report.json --team Wordtracker --project "What's next (archive)" --apply
+python scripts/update_linear.py --match-report /tmp/trello-export/match-report.json --team Wordtracker --project "What's next (archive)" --dry-run
+python scripts/update_linear.py --match-report /tmp/trello-export/match-report.json --team Wordtracker --project "What's next (archive)" --apply
 
 # Phase 4: Verify
-python scripts/verify.py --trello-dir scripts/output/whats-next --linear-file scripts/output/whats-next/linear-issues.json
+python scripts/verify.py --trello-dir /tmp/trello-export --linear-file /tmp/linear-issues.json
 ```
 
 ---

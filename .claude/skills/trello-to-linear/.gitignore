@@ -1,0 +1,5 @@
+# Belt-and-braces: pipeline artifacts belong in /tmp/trello-export (see
+# SKILL.md / WORKFLOW.md), never in the repo. This line stops muscle
+# memory from the old scripts/output/ convention leaking workspace data
+# into git status.
+scripts/output/

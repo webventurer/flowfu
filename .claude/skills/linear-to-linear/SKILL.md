@@ -49,33 +49,33 @@ All scripts live in `scripts/` and import the shared Linear client from `tools/l
 
 ### Running
 
-All commands assume you are in `.claude/skills/linear-to-linear/`.
+All commands assume you are in `.claude/skills/linear-to-linear/`. Pipeline artifacts go to `/tmp/linear-export` so they never touch the repo working tree — see [WORKFLOW.md](WORKFLOW.md) for the canonical walkthrough.
 
 ```bash
 # Phase 1: Export source issues and project metadata
-python scripts/export_linear.py --api-key-env LINEAR_PLAYGROUND_API_KEY --project "Wordtracker: Phase 1" --team "Playground" --output scripts/output/phase1
+python scripts/export_linear.py --api-key-env LINEAR_PLAYGROUND_API_KEY --project "Wordtracker: Phase 1" --team "Playground" --output /tmp/linear-export
 
 # Phase 1.5a: Ensure target project exists with source description/summary
-python scripts/ensure_project.py --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --export-dir scripts/output/phase1
+python scripts/ensure_project.py --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --export-dir /tmp/linear-export
 
 # Phase 1.5b: Check states and labels
-python scripts/check_states.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --target-team "Wordtracker" --export-dir scripts/output/phase1
-python scripts/check_labels.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --export-dir scripts/output/phase1
-python scripts/check_labels.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --export-dir scripts/output/phase1 --create
+python scripts/check_states.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --target-team "Wordtracker" --export-dir /tmp/linear-export
+python scripts/check_labels.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --export-dir /tmp/linear-export
+python scripts/check_labels.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --export-dir /tmp/linear-export --create
 
 # Phase 2: Fetch target issues and match
-python scripts/fetch_target_issues.py --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --output scripts/output/phase1/target_issues.json
-python scripts/match.py --source-dir scripts/output/phase1 --target-file scripts/output/phase1/target_issues.json
+python scripts/fetch_target_issues.py --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --output /tmp/linear-target-issues.json
+python scripts/match.py --source-dir /tmp/linear-export --target-file /tmp/linear-target-issues.json
 
 # Phase 3: Create issues, project updates, and resource links (dry-run first)
-python scripts/bulk_create.py --cards-dir scripts/output/phase1/cards --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --export-dir scripts/output/phase1 --dry-run
-python scripts/bulk_create.py --cards-dir scripts/output/phase1/cards --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --export-dir scripts/output/phase1
+python scripts/bulk_create.py --cards-dir /tmp/linear-export/cards --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --export-dir /tmp/linear-export --dry-run
+python scripts/bulk_create.py --cards-dir /tmp/linear-export/cards --api-key-env LINEAR_WORDTRACKER_API_KEY --team "Wordtracker" --project "Phase 1" --export-dir /tmp/linear-export
 
 # Phase 4: Migrate images
-python scripts/migrate_images.py --source-api-key-env LINEAR_PLAYGROUND_API_KEY --target-api-key-env LINEAR_WORDTRACKER_API_KEY --export-dir scripts/output/phase1 --target-team "Wordtracker" --target-project "Phase 1"
+python scripts/migrate_images.py --source-api-key-env LINEAR_PLAYGROUND_API_KEY --target-api-key-env LINEAR_WORDTRACKER_API_KEY --export-dir /tmp/linear-export --target-team "Wordtracker" --target-project "Phase 1"
 
 # Phase 5: Compare end-to-end (issues + project metadata)
-python scripts/compare.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --target-team "Wordtracker" --target-project "Phase 1" --export-dir scripts/output/phase1
+python scripts/compare.py --target-api-key-env LINEAR_WORDTRACKER_API_KEY --target-team "Wordtracker" --target-project "Phase 1" --export-dir /tmp/linear-export
 ```
 
 ---
