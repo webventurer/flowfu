@@ -7,7 +7,7 @@ import click
 
 from linear_client import (
     create_project,
-    graphql,
+    list_projects,
     require_env,
     resolve_by_name,
     update_project,
@@ -45,9 +45,8 @@ def main(api_key_env: str, team: str, project: str, export_dir: str):
 
 
 def find_project_id(api_key: str, name: str) -> str | None:
-    query = f'{{ projects(filter: {{ name: {{ eq: "{name}" }} }}) {{ nodes {{ id }} }} }}'
-    nodes = graphql(api_key, query)["data"]["projects"]["nodes"]
-    return nodes[0]["id"] if nodes else None
+    match = next((p for p in list_projects(api_key) if p["name"] == name), None)
+    return match["id"] if match else None
 
 
 if __name__ == "__main__":

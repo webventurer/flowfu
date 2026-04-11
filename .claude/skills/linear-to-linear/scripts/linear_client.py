@@ -130,6 +130,81 @@ def create_issue(
     return data["data"]["issueCreate"]["issue"]["id"]
 
 
+UPDATE_ISSUE_QUERY = """mutation($id: String!, $input: IssueUpdateInput!) {
+    issueUpdate(id: $id, input: $input) {
+        issue { id }
+    }
+}"""
+
+
+def update_issue(
+    api_key: str,
+    issue_id: str,
+    title: str | None = None,
+    description: str | None = None,
+    state_id: str | None = None,
+    label_ids: list | None = None,
+) -> str:
+    input_data = {}
+    if title is not None:
+        input_data["title"] = title
+    if description is not None:
+        input_data["description"] = description
+    if state_id is not None:
+        input_data["stateId"] = state_id
+    if label_ids is not None:
+        input_data["labelIds"] = label_ids
+    data = graphql(
+        api_key,
+        UPDATE_ISSUE_QUERY,
+        variables={"id": issue_id, "input": input_data},
+    )
+    return data["data"]["issueUpdate"]["issue"]["id"]
+
+
+LIST_ISSUES_QUERY = """{{
+    issues(
+        filter: {{ {filters} }}
+        first: 250 {after}
+    ) {{
+        nodes {{ id identifier title description }}
+        pageInfo {{ hasNextPage endCursor }}
+    }}
+}}"""
+
+
+def list_issues(
+    api_key: str,
+    team_id: str | None = None,
+    project_id: str | None = None,
+) -> list:
+    issues, cursor = [], None
+    while True:
+        query = _list_issues_query(team_id, project_id, cursor)
+        page = graphql(api_key, query)["data"]["issues"]
+        issues.extend(page["nodes"])
+        if not page["pageInfo"]["hasNextPage"]:
+            return issues
+        cursor = page["pageInfo"]["endCursor"]
+
+
+def _list_issues_query(
+    team_id: str | None, project_id: str | None, cursor: str | None
+) -> str:
+    filters = _issue_filters(team_id, project_id)
+    after = f', after: "{cursor}"' if cursor else ""
+    return LIST_ISSUES_QUERY.format(filters=filters, after=after)
+
+
+def _issue_filters(team_id: str | None, project_id: str | None) -> str:
+    parts = []
+    if team_id:
+        parts.append(f'team: {{ id: {{ eq: "{team_id}" }} }}')
+    if project_id:
+        parts.append(f'project: {{ id: {{ eq: "{project_id}" }} }}')
+    return " ".join(parts)
+
+
 CREATE_ATTACHMENT_QUERY = """mutation($input: AttachmentCreateInput!) {
     attachmentCreate(input: $input) {
         attachment { id }
@@ -294,3 +369,66 @@ DELETE_LABEL_QUERY = """mutation($id: String!) {
 
 def delete_label(api_key: str, label_id: str):
     graphql(api_key, DELETE_LABEL_QUERY, variables={"id": label_id})
+
+
+# ---- Queries: lists ----
+
+LIST_PROJECTS_QUERY = """{{
+    projects(first: 50 {after}) {{
+        nodes {{
+            id name
+            teams {{ nodes {{ id name }} }}
+        }}
+        pageInfo {{ hasNextPage endCursor }}
+    }}
+}}"""
+
+
+def list_projects(api_key: str, team_id: str | None = None) -> list:
+    projects, cursor = [], None
+    while True:
+        after = f', after: "{cursor}"' if cursor else ""
+        data = graphql(api_key, LIST_PROJECTS_QUERY.format(after=after))
+        page = data["data"]["projects"]
+        projects.extend(page["nodes"])
+        if not page["pageInfo"]["hasNextPage"]:
+            break
+        cursor = page["pageInfo"]["endCursor"]
+    return _filter_by_team(projects, team_id) if team_id else projects
+
+
+def _filter_by_team(projects: list, team_id: str) -> list:
+    return [
+        p
+        for p in projects
+        if any(t["id"] == team_id for t in p["teams"]["nodes"])
+    ]
+
+
+LIST_LABELS_QUERY = """{{
+    issueLabels(first: 250 {after}) {{
+        nodes {{ id name color team {{ id }} }}
+        pageInfo {{ hasNextPage endCursor }}
+    }}
+}}"""
+
+
+def list_labels(api_key: str, team_id: str | None = None) -> list:
+    labels, cursor = [], None
+    while True:
+        after = f', after: "{cursor}"' if cursor else ""
+        data = graphql(api_key, LIST_LABELS_QUERY.format(after=after))
+        page = data["data"]["issueLabels"]
+        labels.extend(page["nodes"])
+        if not page["pageInfo"]["hasNextPage"]:
+            break
+        cursor = page["pageInfo"]["endCursor"]
+    return _labels_for_team(labels, team_id) if team_id else labels
+
+
+def _labels_for_team(labels: list, team_id: str) -> list:
+    return [
+        lbl
+        for lbl in labels
+        if lbl.get("team") and lbl["team"]["id"] == team_id
+    ]

@@ -28,6 +28,7 @@ convenience for the small number of scripts that will ever use this.
 ### Mutations (all return the created/updated node id as a string)
 
 - `create_issue(api_key, team_id, project_id, state_id, title, description, label_ids=None)`
+- `update_issue(api_key, issue_id, title=None, description=None, state_id=None, label_ids=None)`
 - `create_attachment(api_key, issue_id, title, url, subtitle=None, metadata=None)`
 - `create_project(api_key, team_id, name, description=None, content=None)`
 - `update_project(api_key, project_id, description=None, content=None)`
@@ -37,6 +38,12 @@ convenience for the small number of scripts that will ever use this.
 - `delete_issue(api_key, issue_id)`
 - `delete_project(api_key, project_id)`
 - `delete_label(api_key, label_id)`
+
+### Queries
+
+- `list_issues(api_key, team_id=None, project_id=None)` — auto-paginates. Returns list of dicts: `id`, `identifier`, `title`, `description`.
+- `list_projects(api_key, team_id=None)` — auto-paginates. Returns list of dicts: `id`, `name`, `teams`. Filter by team client-side if `team_id` is passed.
+- `list_labels(api_key, team_id=None)` — auto-paginates. Returns list of dicts: `id`, `name`, `color`, `team`. Filter by team client-side if `team_id` is passed.
 
 ## API contract
 

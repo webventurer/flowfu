@@ -32,14 +32,20 @@ from linear_client import (  # noqa: E402
     delete_label,
     delete_project,
     graphql,
+    list_issues,
+    list_labels,
+    list_projects,
     require_env,
     resolve_by_name,
     resolve_states,
+    update_issue,
     update_project,
 )
 
 LIVE = os.environ.get("LINEAR_E2E") == "1"
-API_KEY_ENV = os.environ.get("LINEAR_TEST_API_KEY_ENV", "LINEAR_PLAYGROUND_API_KEY")
+API_KEY_ENV = os.environ.get(
+    "LINEAR_TEST_API_KEY_ENV", "LINEAR_PLAYGROUND_API_KEY"
+)
 TEAM_NAME = os.environ.get("LINEAR_TEST_TEAM", "Playground")
 
 live_only = pytest.mark.skipif(
@@ -152,6 +158,70 @@ def test_create_and_delete_label(api_key):
 
 
 @live_only
+def test_update_issue(api_key, team_id, scratch_project, state_id):
+    title = f"sdk-test-update-{_suffix()}"
+    issue_id = create_issue(
+        api_key,
+        team_id=team_id,
+        project_id=scratch_project,
+        state_id=state_id,
+        title=title,
+        description="original",
+    )
+    try:
+        returned = update_issue(api_key, issue_id, description="updated")
+        assert returned == issue_id
+        fetched = [
+            i
+            for i in list_issues(api_key, project_id=scratch_project)
+            if i["id"] == issue_id
+        ]
+        assert fetched and fetched[0]["description"] == "updated"
+    finally:
+        delete_issue(api_key, issue_id)
+
+
+@live_only
+def test_list_issues_filters_by_project(
+    api_key, team_id, scratch_project, state_id
+):
+    title = f"sdk-test-list-{_suffix()}"
+    issue_id = create_issue(
+        api_key,
+        team_id=team_id,
+        project_id=scratch_project,
+        state_id=state_id,
+        title=title,
+        description="test",
+    )
+    try:
+        issues = list_issues(api_key, project_id=scratch_project)
+        assert any(i["id"] == issue_id for i in issues)
+        assert all(isinstance(i.get("title"), str) for i in issues)
+    finally:
+        delete_issue(api_key, issue_id)
+
+
+@live_only
+def test_list_projects_returns_projects(api_key):
+    projects = list_projects(api_key)
+    assert isinstance(projects, list)
+    assert projects, "expected at least one project in the test workspace"
+    assert all("id" in p and "name" in p for p in projects)
+
+
+@live_only
+def test_list_labels_returns_labels(api_key):
+    name = f"sdk-test-label-{_suffix()}"
+    label_id = create_label(api_key, name=name, color="#00ff00")
+    try:
+        labels = list_labels(api_key)
+        assert any(lbl["id"] == label_id for lbl in labels)
+    finally:
+        delete_label(api_key, label_id)
+
+
+@live_only
 def test_create_attachment(api_key, team_id, scratch_project, state_id):
     title = f"sdk-test-issue-att-{_suffix()}"
     issue_id = create_issue(
@@ -178,7 +248,9 @@ def test_create_attachment(api_key, team_id, scratch_project, state_id):
 def test_graphql_raises_linear_error_on_bad_query(api_key):
     with pytest.raises(LinearError) as excinfo:
         graphql(api_key, "{ nonexistentField }")
-    assert "nonexistentField" in str(excinfo.value) or "400" in str(excinfo.value)
+    assert "nonexistentField" in str(excinfo.value) or "400" in str(
+        excinfo.value
+    )
 
 
 def test_graphql_raises_linear_error_on_errors_payload():

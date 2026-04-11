@@ -5,7 +5,7 @@ from pathlib import Path
 
 import click
 
-from linear_client import LinearError, create_label, graphql, require_env
+from linear_client import LinearError, create_label, list_labels, require_env
 
 
 @click.command()
@@ -17,7 +17,7 @@ from linear_client import LinearError, create_label, graphql, require_env
 def main(target_api_key_env: str, export_dir: str, create: bool):
     api_key = require_env(target_api_key_env)
     source_labels = load_source_labels(Path(export_dir))
-    target_labels = fetch_target_labels(api_key)
+    target_labels = list_labels(api_key)
 
     source_names = {label["name"] for label in source_labels}
     target_names = {label["name"] for label in target_labels}
@@ -42,13 +42,6 @@ def load_source_labels(export_dir: Path) -> list:
         for name in card.get("labels", []):
             seen[name] = True
     return [{"name": name, "color": ""} for name in seen]
-
-
-LABELS_QUERY = """{ issueLabels { nodes { name color } } }"""
-
-
-def fetch_target_labels(api_key: str) -> list:
-    return graphql(api_key, LABELS_QUERY)["data"]["issueLabels"]["nodes"]
 
 
 def report(source_labels: list, missing: set):

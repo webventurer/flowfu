@@ -12,7 +12,7 @@ from linear_client import (
     create_issue,
     create_project_link,
     create_project_update,
-    graphql,
+    list_labels,
     require_env,
     resolve_by_name,
     resolve_states,
@@ -59,15 +59,8 @@ def resolve_state_ids(api_key: str, team_id: str) -> dict:
     return {name: s["id"] for name, s in states.items()}
 
 
-LABELS_QUERY = """{ issueLabels { nodes { id name } } }"""
-
-
 def resolve_label_ids(api_key: str) -> dict:
-    data = graphql(api_key, LABELS_QUERY)
-    return {
-        label["name"]: label["id"]
-        for label in data["data"]["issueLabels"]["nodes"]
-    }
+    return {label["name"]: label["id"] for label in list_labels(api_key)}
 
 
 def validate_states(payloads: list, state_ids: dict):
