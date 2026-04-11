@@ -6,7 +6,7 @@ from difflib import SequenceMatcher
 from pathlib import Path
 
 import click
-from linear_api import load_source_cards, load_target_issues_file
+from skill_io import load_source_cards, load_target_issues_file
 
 
 @click.command()

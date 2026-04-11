@@ -4,7 +4,8 @@ import json
 from pathlib import Path
 
 import click
-from linear_api import graphql, require_env
+
+from linear_client import LinearError, create_label, list_labels, require_env
 
 
 @click.command()
@@ -16,7 +17,7 @@ from linear_api import graphql, require_env
 def main(target_api_key_env: str, export_dir: str, create: bool):
     api_key = require_env(target_api_key_env)
     source_labels = load_source_labels(Path(export_dir))
-    target_labels = fetch_target_labels(api_key)
+    target_labels = list_labels(api_key)
 
     source_names = {label["name"] for label in source_labels}
     target_names = {label["name"] for label in target_labels}
@@ -43,13 +44,6 @@ def load_source_labels(export_dir: Path) -> list:
     return [{"name": name, "color": ""} for name in seen]
 
 
-LABELS_QUERY = """{ issueLabels { nodes { name color } } }"""
-
-
-def fetch_target_labels(api_key: str) -> list:
-    return graphql(api_key, LABELS_QUERY)["data"]["issueLabels"]["nodes"]
-
-
 def report(source_labels: list, missing: set):
     click.echo("Source labels:")
     for label in sorted(source_labels, key=lambda x: x["name"]):
@@ -64,26 +58,16 @@ def create_missing(api_key: str, source_labels: list, missing: set):
     click.echo(f"\nCreating {len(missing)} missing labels...")
     source_by_name = {label["name"]: label for label in source_labels}
     for name in sorted(missing):
-        color = source_by_name[name].get("color", "")
-        create_label(api_key, name, color)
+        color = source_by_name[name].get("color") or None
+        create_one_label(api_key, name, color)
 
 
-CREATE_LABEL_QUERY = """mutation($input: IssueLabelCreateInput!) {
-    issueLabelCreate(input: $input) { success issueLabel { id name } }
-}"""
-
-
-def create_label(api_key: str, name: str, color: str):
-    label_input = {"name": name}
-    if color:
-        label_input["color"] = color
-    result = graphql(
-        api_key, CREATE_LABEL_QUERY, variables={"input": label_input}
-    )
-    success = (
-        result.get("data", {}).get("issueLabelCreate", {}).get("success", False)
-    )
-    click.echo(f"  {'✓' if success else '✗'} {name}")
+def create_one_label(api_key: str, name: str, color: str | None):
+    try:
+        create_label(api_key, name=name, color=color)
+        click.echo(f"  ✓ {name}")
+    except LinearError as e:
+        click.echo(f"  ✗ {name} — {e}")
 
 
 if __name__ == "__main__":

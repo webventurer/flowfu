@@ -6,7 +6,15 @@ from pathlib import Path
 
 import click
 import requests
-from linear_api import graphql, require_env
+
+from linear_client import (
+    LinearError,
+    graphql,
+    list_issues,
+    require_env,
+    resolve_by_name,
+    update_issue,
+)
 
 
 @click.command()
@@ -190,7 +198,11 @@ def append_images_to_issue(
 
     img_md = build_image_markdown(url_map)
     new_desc = (issue.get("description", "") + "\n\n" + img_md).strip()
-    update_issue(api_key, issue["id"], new_desc, title)
+    try:
+        update_issue(api_key, issue["id"], description=new_desc)
+        click.echo(f"  ✓ {title[:60]}: updated")
+    except LinearError as e:
+        click.echo(f"  ✗ {title[:60]}: {e}")
 
 
 def find_issue_by_title(issues: list, title: str) -> dict | None:
@@ -201,35 +213,9 @@ def build_image_markdown(url_map: dict) -> str:
     return "\n\n".join(f"![{alt}]({url})" for alt, url in url_map.values())
 
 
-UPDATE_ISSUE_QUERY = """mutation {{
-    issueUpdate(id: "{issue_id}", input: {{ description: {desc_json} }}) {{ success }}
-}}"""
-
-
-def update_issue(api_key: str, issue_id: str, description: str, title: str):
-    desc_json = json.dumps(description)
-    result = graphql(
-        api_key,
-        UPDATE_ISSUE_QUERY.format(issue_id=issue_id, desc_json=desc_json),
-    )
-    success = (
-        result.get("data", {}).get("issueUpdate", {}).get("success", False)
-    )
-    click.echo(
-        f"  {'✓' if success else '✗'} {title[:60]}: {'updated' if success else 'failed'}"
-    )
-
-
-TARGET_ISSUES_QUERY = """{{ issues(filter: {{
-    team: {{ name: {{ eq: "{team}" }} }}
-    project: {{ name: {{ eq: "{project}" }} }}
-}}, first: 250) {{ nodes {{ id title description }} }} }}"""
-
-
 def fetch_target_issues(api_key: str, team: str, project: str) -> list:
-    return graphql(
-        api_key, TARGET_ISSUES_QUERY.format(team=team, project=project)
-    )["data"]["issues"]["nodes"]
+    project_id = resolve_by_name(api_key, "projects", project)
+    return list_issues(api_key, project_id=project_id)
 
 
 if __name__ == "__main__":

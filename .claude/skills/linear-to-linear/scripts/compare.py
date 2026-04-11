@@ -6,7 +6,16 @@ import time
 from pathlib import Path
 
 import click
-from linear_api import graphql, normalize_quotes, require_env
+
+from linear_client import (
+    LinearError,
+    graphql,
+    list_issues,
+    normalize_quotes,
+    require_env,
+    resolve_by_name,
+    update_issue,
+)
 
 TOLERANCE = 100
 
@@ -39,35 +48,18 @@ def main(
     ]
     report_problems(problems)
 
-    meta_problems = compare_project_meta(target_key, target_project, export_path)
+    meta_problems = compare_project_meta(
+        target_key, target_project, export_path
+    )
     report_meta_problems(meta_problems)
 
     if fix and problems:
         fix_problems(target_key, problems)
 
 
-ISSUES_QUERY = """{{ issues(filter: {{
-    team: {{ name: {{ eq: "{team}" }} }}
-    project: {{ name: {{ eq: "{project}" }} }}
-}}, first: 250 {after}) {{
-    nodes {{ id title description }}
-    pageInfo {{ hasNextPage endCursor }}
-}} }}"""
-
-
 def fetch_issues(api_key: str, team: str, project: str) -> list:
-    issues, cursor = [], None
-    while True:
-        after = f', after: "{cursor}"' if cursor else ""
-        data = graphql(
-            api_key,
-            ISSUES_QUERY.format(team=team, project=project, after=after),
-        )["data"]["issues"]
-        issues.extend(data["nodes"])
-        if not data["pageInfo"]["hasNextPage"]:
-            break
-        cursor = data["pageInfo"]["endCursor"]
-    return issues
+    project_id = resolve_by_name(api_key, "projects", project)
+    return list_issues(api_key, project_id=project_id)
 
 
 def compare_one(card: dict, target_by_title: dict) -> dict | None:
@@ -136,25 +128,16 @@ def report_problems(problems: list):
             click.echo(f"    - {issue}")
 
 
-UPDATE_ISSUE_QUERY = 'mutation {{ issueUpdate(id: "{issue_id}", input: {{ description: {desc_json} }}) {{ success }} }}'
-
-
 def fix_problems(target_key: str, problems: list):
     click.echo(f"\nFixing {len(problems)} issues...")
     fixed = 0
     for p in problems:
-        desc_json = json.dumps(p["expected"])
-        result = graphql(
-            target_key,
-            UPDATE_ISSUE_QUERY.format(
-                issue_id=p["target_id"], desc_json=desc_json
-            ),
-        )
-        success = (
-            result.get("data", {}).get("issueUpdate", {}).get("success", False)
-        )
-        click.echo(f"  {'✓' if success else '✗'} {p['title'][:60]}")
-        fixed += success
+        try:
+            update_issue(target_key, p["target_id"], description=p["expected"])
+            click.echo(f"  ✓ {p['title'][:60]}")
+            fixed += 1
+        except LinearError as e:
+            click.echo(f"  ✗ {p['title'][:60]} — {e}")
         if fixed % 10 == 0:
             time.sleep(0.5)
     click.echo(f"\nFixed {fixed}/{len(problems)}")
@@ -181,9 +164,7 @@ def load_json_file(path: Path) -> list | dict:
     return json.loads(path.read_text()) if path.exists() else []
 
 
-def compare_project_meta(
-    api_key: str, project: str, export_dir: Path
-) -> list:
+def compare_project_meta(api_key: str, project: str, export_dir: Path) -> list:
     target = fetch_target_project_meta(api_key, project)
     if not target:
         return [f"target project '{project}' not found"]
@@ -201,9 +182,13 @@ def compare_project_meta(
 
 def compare_project_fields(source: dict, target: dict) -> list:
     problems = []
-    if source.get("description", "") != normalize_quotes(target.get("content") or ""):
+    if source.get("description", "") != normalize_quotes(
+        target.get("content") or ""
+    ):
         problems.append("project description differs from source")
-    if source.get("summary", "") != normalize_quotes(target.get("description") or ""):
+    if source.get("summary", "") != normalize_quotes(
+        target.get("description") or ""
+    ):
         problems.append("project summary differs from source")
     return problems
 
@@ -219,7 +204,9 @@ def compare_project_updates(source: list, target: dict) -> list:
 def compare_project_links(source: list, target: dict) -> list:
     target_urls = {ln["url"] for ln in target["externalLinks"]["nodes"]}
     missing = [ln for ln in source if ln["url"] not in target_urls]
-    return [f"missing resource link: {ln['label']} → {ln['url']}" for ln in missing]
+    return [
+        f"missing resource link: {ln['label']} → {ln['url']}" for ln in missing
+    ]
 
 
 def report_meta_problems(problems: list):
