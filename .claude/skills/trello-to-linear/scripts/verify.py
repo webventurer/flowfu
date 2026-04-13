@@ -220,7 +220,7 @@ def check_description(card: dict, desc: str, identifier: str) -> str | None:
 
 
 def count_linear_comments(desc: str) -> int:
-    return len(re.findall(r"\*\*\w+\*\* \(\d{4}-\d{2}-\d{2}\):", desc))
+    return len(re.findall(r"\*\*[^*]+\*\* \(\d{4}-\d{2}-\d{2}\):", desc))
 
 
 def check_comments(card: dict, desc: str, identifier: str) -> str | None:
