@@ -241,6 +241,8 @@ Ask: **"Does this look right, or do you want changes?"**
 
 If the user requests changes, make them, re-validate (step 7), commit, push, and show the updated diff. Repeat until the user is satisfied.
 
+<mark>**When the user approves, stop. Do not merge.** Say "Ready for `/finish` when you are" and end. Merging is `/finish`'s job — it uses `--merge` to preserve atomic commits. Never use `--squash`.</mark>
+
 The PR is the record. The terminal is where the real review happens first.
 
 ---
