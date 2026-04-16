@@ -95,14 +95,14 @@ This requires an OpenRouter API key. See the [install guide](/install) for setup
 
 When you run `npx github:webventurer/stride`, the script (`bin/install.mjs`) does four things:
 
-1. **Copies files** into your project's `.claude/` directory — skills, commands, hooks, docs, and the `tools/` folder
+1. **Copies files** into your project's `.claude/` directory — skills, commands, hooks, tools, and supporting docs. Never writes outside `.claude/`
 2. **Sets permissions** — makes hook scripts (`do_commit.sh`, `block_bare_git_commit.sh`) executable
 3. **Merges settings** — if you already have a `.claude/settings.json`, it asks before merging. If you say no, nothing is touched. If you don't have one, it creates a minimal config with the commit hook wired up
 4. **Prints a summary** — shows what was installed and which commands are available
 
 The merge is additive — it adds stride's hooks alongside your existing config using a deep merge with deduplication. It never removes or overwrites your existing settings.
 
-**If something goes wrong:** the script only writes to `.claude/` and `tools/` inside your project. Delete those directories to fully uninstall. There are no global side effects.
+**If something goes wrong:** the script only writes under `.claude/`. Run `stride-uninstall` or delete the installed subdirs to remove everything. There are no global side effects.
 
 ## Customising
 

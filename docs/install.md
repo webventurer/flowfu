@@ -28,7 +28,7 @@ npm install -g @anthropic-ai/claude-code
 
 The `/linear` commands need Linear's [official MCP server](https://linear.app/docs/mcp). There are two ways to connect — **OAuth** (simplest) or **API key** (needed for multiple orgs).
 
-Copy `.mcp.json.example` to `.mcp.json` and choose your approach:
+Create `.mcp.json` in your repo root using one of the snippets below:
 
 #### OAuth (single org)
 
@@ -137,13 +137,15 @@ Get your key at [openrouter.ai/keys](https://openrouter.ai/keys).
 
 ```bash
 .claude/
-├── skills/commit/           # skill + workflow + reference docs
-├── commands/linear/         # 5 commands + reference docs
-├── hooks/                   # commit wrapper + bare-commit blocker
-└── docs/                    # supporting patterns and concepts
+├── skills/commit/       # skill + workflow + reference docs
+├── skills/craft/        # CRAFT prompt skill
+├── commands/linear/     # 5 commands + reference docs
+├── hooks/               # commit wrapper + bare-commit blocker
+├── tools/               # cross-model feedback script
+└── stride/docs/         # supporting patterns and concepts
 ```
 
-The install script merges hook config into `.claude/settings.local.json` (gitignored) — your committed `settings.json` is never modified. Claude Code concatenates hooks from both files, so repo hooks and stride hooks run together.
+The installer only writes under `.claude/` — it never touches other directories in your repo. Hook config goes into `.claude/settings.local.json` (gitignored) — your committed `settings.json` is never modified. Claude Code concatenates hooks from both files, so repo hooks and stride hooks run together.
 
 ## Migration skills
 

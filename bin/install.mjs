@@ -7,7 +7,6 @@ import {
   lstatSync,
   mkdirSync,
   readFileSync,
-  rmSync,
   writeFileSync,
 } from "node:fs";
 import { dirname, join } from "node:path";
@@ -92,7 +91,7 @@ const DIRS = [
   ".claude/stride/docs/patterns/git",
   ".claude/stride/docs/concepts",
   ".claude/stride/docs/principles",
-  "tools",
+  ".claude/tools",
 ];
 
 const HOOKS = [
@@ -101,21 +100,35 @@ const HOOKS = [
   ".claude/hooks/userpromptsubmit/inject_design_principles.sh",
 ];
 
-function resolveTypeMismatch(dest) {
+function abortOnTypeMismatch(dest) {
   const src = join(srcRoot, dest);
   const full = join(destRoot, dest);
   if (!existsSync(full)) return;
-  const srcIsDir = lstatSync(src).isDirectory();
-  const destIsDir = lstatSync(full).isDirectory();
-  if (srcIsDir !== destIsDir) rmSync(full, { recursive: true, force: true });
+  if (lstatSync(src).isDirectory() === lstatSync(full).isDirectory()) return;
+  console.error(
+    `\nERROR: ${dest} has different type in source vs target.\n` +
+      `Source: ${src}\nTarget: ${full}\n` +
+      `Stride will not overwrite this — resolve manually and re-run.`,
+  );
+  process.exit(1);
 }
 
 function copyDir(dir) {
   const src = join(srcRoot, dir);
   if (!existsSync(src)) return;
-  resolveTypeMismatch(dir);
+  abortOnTypeMismatch(dir);
+  assertUnderClaudeDir(dir);
   mkdirSync(join(destRoot, dir), { recursive: true });
   cpSync(src, join(destRoot, dir), { recursive: true });
+}
+
+function assertUnderClaudeDir(dir) {
+  if (dir.startsWith(".claude/") || dir === ".claude") return;
+  console.error(
+    `\nERROR: refusing to write outside .claude/: ${dir}\n` +
+      `Stride's install footprint is .claude/ only. This is a bug in DIRS.`,
+  );
+  process.exit(1);
 }
 
 function makeExecutable(hook) {
@@ -126,15 +139,6 @@ function makeExecutable(hook) {
 function copyFiles() {
   DIRS.forEach(copyDir);
   HOOKS.forEach(makeExecutable);
-}
-
-const EXAMPLE_FILES = [".mcp.json.example"];
-
-function copyExampleFiles() {
-  for (const file of EXAMPLE_FILES) {
-    const src = join(srcRoot, file);
-    if (existsSync(src)) cpSync(src, join(destRoot, file));
-  }
 }
 
 const LINEAR_OAUTH = {
@@ -230,18 +234,16 @@ function mergeSettings() {
 
 function installFiles() {
   copyFiles();
-  copyExampleFiles();
   logCopiedFiles();
 }
 
 function logCopiedFiles() {
-  console.log("Copied:");
-  console.log("  .claude/skills/commit/     (4-pass atomic commit skill)");
-  console.log("  .claude/commands/linear/   (Linear workflow commands)");
-  console.log("  .claude/hooks/             (commit hook scripts)");
-  console.log("  .claude/stride/docs/       (principles, patterns, concepts)");
-  console.log("  tools/                     (cross-model feedback script)");
-  console.log("  .mcp.json.example          (Linear MCP server reference)");
+  console.log("Copied to .claude/:");
+  console.log("  skills/commit/   (4-pass atomic commit skill)");
+  console.log("  commands/linear/ (Linear workflow commands)");
+  console.log("  hooks/           (commit hook scripts)");
+  console.log("  stride/docs/     (principles, patterns, concepts)");
+  console.log("  tools/           (cross-model feedback script)");
 }
 
 async function confirmSettingsMerge() {

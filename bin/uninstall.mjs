@@ -18,10 +18,8 @@ const DIRS = [
   ".claude/stride/docs/patterns/git",
   ".claude/stride/docs/concepts",
   ".claude/stride/docs/principles",
-  "tools",
+  ".claude/tools",
 ];
-
-const EXAMPLE_FILES = [".mcp.json.example"];
 
 const HOOK_MATCHERS = [
   "block_bare_git_commit.sh",
@@ -31,11 +29,6 @@ const HOOK_MATCHERS = [
 function removeDir(dir) {
   const full = join(destRoot, dir);
   if (existsSync(full)) rmSync(full, { recursive: true, force: true });
-}
-
-function removeFile(file) {
-  const full = join(destRoot, file);
-  if (existsSync(full)) rmSync(full);
 }
 
 function isStrideHook(entry) {
@@ -63,20 +56,16 @@ function main() {
   console.log("\nstride — uninstalling\n");
 
   DIRS.forEach(removeDir);
-  EXAMPLE_FILES.forEach(removeFile);
   removeHookConfig();
 
-  console.log("Removed:");
-  console.log("  .claude/skills/commit/     (4-pass atomic commit skill)");
-  console.log("  .claude/skills/craft/      (CRAFT prompt skill)");
-  console.log("  .claude/commands/linear/   (Linear workflow commands)");
-  console.log("  .claude/hooks/             (commit hook scripts)");
-  console.log("  .claude/stride/docs/       (principles, patterns, concepts)");
-  console.log("  tools/                     (cross-model feedback script)");
-  console.log("  .mcp.json.example          (Linear MCP server reference)");
-  console.log(
-    "  hooks config               (from .claude/settings.local.json)",
-  );
+  console.log("Removed from .claude/:");
+  console.log("  skills/commit/   (4-pass atomic commit skill)");
+  console.log("  skills/craft/    (CRAFT prompt skill)");
+  console.log("  commands/linear/ (Linear workflow commands)");
+  console.log("  hooks/           (commit hook scripts)");
+  console.log("  stride/docs/     (principles, patterns, concepts)");
+  console.log("  tools/           (cross-model feedback script)");
+  console.log("  hooks config     (from settings.local.json)");
   console.log(
     "\nNote: .mcp.json was not modified — remove Linear servers manually if needed.",
   );

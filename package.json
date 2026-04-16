@@ -17,8 +17,7 @@
   },
   "files": [
     "bin",
-    ".claude",
-    "tools"
+    ".claude"
   ],
   "keywords": [
     "claude-code",
