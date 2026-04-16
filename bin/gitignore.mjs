@@ -6,14 +6,33 @@ export function buildSection(entries) {
 }
 
 export function removeSection(content) {
+  const bounds = findSectionBounds(content);
+  if (!bounds) return content;
+  const { before, after } = splitAroundSection(content, bounds);
+  return joinOutsideSection(before, after);
+}
+
+function findSectionBounds(content) {
   const beginIdx = content.indexOf(GITIGNORE_BEGIN);
-  if (beginIdx === -1) return content;
+  if (beginIdx === -1) return null;
   const endIdx = content.indexOf(GITIGNORE_END, beginIdx);
-  if (endIdx === -1) return content;
-  const endNewline = content.indexOf("\n", endIdx);
-  const sectionEnd = endNewline === -1 ? content.length : endNewline + 1;
-  const before = content.slice(0, beginIdx).replace(/\n+$/, "");
-  const after = content.slice(sectionEnd).replace(/^\n+/, "");
+  if (endIdx === -1) return null;
+  return { beginIdx, sectionEnd: lineAfter(content, endIdx) };
+}
+
+function lineAfter(content, idx) {
+  const newline = content.indexOf("\n", idx);
+  return newline === -1 ? content.length : newline + 1;
+}
+
+function splitAroundSection(content, { beginIdx, sectionEnd }) {
+  return {
+    before: content.slice(0, beginIdx).replace(/\n+$/, ""),
+    after: content.slice(sectionEnd).replace(/^\n+/, ""),
+  };
+}
+
+function joinOutsideSection(before, after) {
   if (!before && !after) return "";
   if (!before) return after;
   if (!after) return `${before}\n`;
