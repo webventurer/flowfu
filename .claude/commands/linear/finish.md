@@ -49,18 +49,13 @@ If anything fails, stop — do not merge. Show what failed.
 
 ### 5. Merge (preserve commits)
 
-Merge with `--merge` to preserve the atomic commits from the branch. The merge commit message summarises the work:
+Merge with `--merge` to preserve the atomic commits from the branch. The merge commit gets the default subject only — no body. The individual commits on the branch already explain what was built and why; duplicating that in the merge commit just creates drift between the two messages.
 
 ```bash
-gh pr merge <number> --merge --subject "Merge branch '<gitBranchName>'" --body "$(cat <<'EOF'
-<paragraph explaining what was built and why>
-
-Closes PG-<id>
-EOF
-)"
+gh pr merge <number> --merge --subject "Merge branch '<gitBranchName>'" --body ""
 ```
 
-The individual commits tell the detailed story. The merge commit summarises the outcome.
+Pass `--body ""` explicitly so `gh` does not fall back to the PR description.
 
 ### 6. Clean up branches, remove worktree, close VS Code
 
