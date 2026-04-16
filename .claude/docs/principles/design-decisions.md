@@ -2,6 +2,15 @@
 
 > **AI Assistant Note**: Before every design choice — naming, structure, scope, abstraction, dependency — check it against these principles. They are not guidelines to consider; they are constraints to obey.
 
+| # | Principle | Meaning |
+|:--|:----------|:--------|
+| 1 | [Choose the path that makes change easier](#choose-the-path-that-makes-change-easier) | The universal principle |
+| 2 | [Postpone decisions](#postpone-decisions) | Don't decide until a requirement forces you to |
+| 3 | [One reason to change](#one-reason-to-change) | SRP for code, commits, PRs, issues |
+| 4 | [Be atomic](#be-atomic) | One purpose per unit of work |
+| 5 | [Do the simplest thing that works](#do-the-simplest-thing-that-works) | Obvious over clever |
+| 6 | [YAGNI](#yagni--you-aint-gonna-need-it) | Don't build it until you need it |
+
 ## Choose the path that makes change easier
 
 > "When faced with two or more alternatives that deliver roughly the same value, **take the path that makes future change easier**."
