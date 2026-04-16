@@ -1,8 +1,19 @@
 #!/usr/bin/env node
 
-import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import {
+  existsSync,
+  lstatSync,
+  readdirSync,
+  readFileSync,
+  rmdirSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { dirname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const srcRoot = join(__dirname, "..");
 const destRoot = process.cwd();
 
 if (existsSync(join(destRoot, "bin/install.mjs"))) {
@@ -26,9 +37,36 @@ const HOOK_MATCHERS = [
   "inject_design_principles.sh",
 ];
 
-function removeDir(dir) {
-  const full = join(destRoot, dir);
-  if (existsSync(full)) rmSync(full, { recursive: true, force: true });
+function walkFiles(root, base = root) {
+  const paths = [];
+  for (const entry of readdirSync(root)) {
+    const full = join(root, entry);
+    const stat = lstatSync(full);
+    if (stat.isSymbolicLink()) continue;
+    if (stat.isDirectory()) paths.push(...walkFiles(full, base));
+    else paths.push(relative(base, full));
+  }
+  return paths;
+}
+
+function removeStrideFiles(dir) {
+  const srcDir = join(srcRoot, dir);
+  const destDir = join(destRoot, dir);
+  if (!existsSync(srcDir) || !existsSync(destDir)) return;
+  for (const rel of walkFiles(srcDir)) {
+    const target = join(destDir, rel);
+    if (existsSync(target)) unlinkSync(target);
+  }
+  pruneEmptyDirs(destDir);
+}
+
+function pruneEmptyDirs(dir) {
+  if (!existsSync(dir)) return;
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (lstatSync(full).isDirectory()) pruneEmptyDirs(full);
+  }
+  if (readdirSync(dir).length === 0) rmdirSync(dir);
 }
 
 function isStrideHook(entry) {
@@ -55,10 +93,10 @@ function removeHookConfig() {
 function main() {
   console.log("\nstride — uninstalling\n");
 
-  DIRS.forEach(removeDir);
+  DIRS.forEach(removeStrideFiles);
   removeHookConfig();
 
-  console.log("Removed from .claude/:");
+  console.log("Removed stride files from .claude/:");
   console.log("  skills/commit/   (4-pass atomic commit skill)");
   console.log("  skills/craft/    (CRAFT prompt skill)");
   console.log("  commands/linear/ (Linear workflow commands)");
@@ -67,7 +105,10 @@ function main() {
   console.log("  tools/           (cross-model feedback script)");
   console.log("  hooks config     (from settings.local.json)");
   console.log(
-    "\nNote: .mcp.json was not modified — remove Linear servers manually if needed.",
+    "\nOther files in shared directories (codefu symlinks, your own hooks) left untouched.",
+  );
+  console.log(
+    "Note: .mcp.json was not modified — remove Linear servers manually if needed.",
   );
   console.log("Done.\n");
 }
