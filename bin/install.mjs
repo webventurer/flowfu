@@ -1,15 +1,18 @@
 #!/usr/bin/env node
 
+import { createHash } from "node:crypto";
 import {
   chmodSync,
-  cpSync,
+  copyFileSync,
   existsSync,
   lstatSync,
   mkdirSync,
+  readdirSync,
   readFileSync,
+  statSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 import { buildSection, removeSection } from "./gitignore.mjs";
@@ -101,28 +104,6 @@ const HOOKS = [
   ".claude/hooks/userpromptsubmit/inject_design_principles.sh",
 ];
 
-function abortOnTypeMismatch(dest) {
-  const src = join(srcRoot, dest);
-  const full = join(destRoot, dest);
-  if (!existsSync(full)) return;
-  if (lstatSync(src).isDirectory() === lstatSync(full).isDirectory()) return;
-  console.error(
-    `\nERROR: ${dest} has different type in source vs target.\n` +
-      `Source: ${src}\nTarget: ${full}\n` +
-      `Stride will not overwrite this — resolve manually and re-run.`,
-  );
-  process.exit(1);
-}
-
-function copyDir(dir) {
-  const src = join(srcRoot, dir);
-  if (!existsSync(src)) return;
-  abortOnTypeMismatch(dir);
-  assertUnderClaudeDir(dir);
-  mkdirSync(join(destRoot, dir), { recursive: true });
-  cpSync(src, join(destRoot, dir), { recursive: true });
-}
-
 function assertUnderClaudeDir(dir) {
   if (dir.startsWith(".claude/") || dir === ".claude") return;
   console.error(
@@ -132,14 +113,94 @@ function assertUnderClaudeDir(dir) {
   process.exit(1);
 }
 
+function hashFile(path) {
+  return createHash("sha256").update(readFileSync(path)).digest("hex");
+}
+
+function contentsMatch(srcFile, destFile) {
+  return hashFile(srcFile) === hashFile(destFile);
+}
+
+function walkFiles(root, base = root) {
+  const paths = [];
+  for (const entry of readdirSync(root)) {
+    const full = join(root, entry);
+    const stat = lstatSync(full);
+    if (stat.isSymbolicLink()) continue;
+    if (stat.isDirectory()) paths.push(...walkFiles(full, base));
+    else paths.push(relative(base, full));
+  }
+  return paths;
+}
+
+function planAction(srcFile, destFile) {
+  if (!existsSync(destFile)) return "copy";
+  if (statSync(destFile).isDirectory()) return "conflict";
+  return contentsMatch(srcFile, destFile) ? "skip" : "conflict";
+}
+
+function copyFile(srcFile, destFile) {
+  mkdirSync(dirname(destFile), { recursive: true });
+  copyFileSync(srcFile, destFile);
+}
+
+const ACTIONS = {
+  copy: (src, dst, rel, s) => {
+    copyFile(src, dst);
+    s.copied.push(rel);
+  },
+  skip: (_src, _dst, rel, s) => s.skipped.push(rel),
+  conflict: (_src, _dst, rel, s) => s.conflicts.push(rel),
+};
+
+function installFile(srcFile, destFile, rel, summary) {
+  ACTIONS[planAction(srcFile, destFile)](srcFile, destFile, rel, summary);
+}
+
+function emptySummary() {
+  return { copied: [], skipped: [], conflicts: [] };
+}
+
+function installDir(dir) {
+  const srcDir = join(srcRoot, dir);
+  const summary = emptySummary();
+  if (!existsSync(srcDir)) return summary;
+  assertUnderClaudeDir(dir);
+  for (const rel of walkFiles(srcDir)) {
+    installFile(
+      join(srcDir, rel),
+      join(destRoot, dir, rel),
+      join(dir, rel),
+      summary,
+    );
+  }
+  return summary;
+}
+
+function mergeSummary(totals, part) {
+  totals.copied.push(...part.copied);
+  totals.skipped.push(...part.skipped);
+  totals.conflicts.push(...part.conflicts);
+}
+
+function reportConflictsAndExit(paths) {
+  console.error("\nERROR: target files differ from stride's source:");
+  for (const p of paths) console.error(`  ${p}`);
+  console.error("\nResolve manually (diff or replace) and re-run.");
+  process.exit(1);
+}
+
 function makeExecutable(hook) {
   const path = join(destRoot, hook);
   if (existsSync(path)) chmodSync(path, 0o755);
 }
 
 function copyFiles() {
-  DIRS.forEach(copyDir);
+  const totals = emptySummary();
+  for (const dir of DIRS) mergeSummary(totals, installDir(dir));
   HOOKS.forEach(makeExecutable);
+  if (totals.conflicts.length > 0) reportConflictsAndExit(totals.conflicts);
+  return totals;
 }
 
 const LINEAR_OAUTH = {
@@ -234,12 +295,16 @@ function mergeSettings() {
 }
 
 function installFiles() {
-  copyFiles();
-  logCopiedFiles();
+  logCopiedFiles(copyFiles());
 }
 
-function logCopiedFiles() {
-  console.log("Copied to .claude/:");
+function installHeader({ copied, skipped }) {
+  if (skipped.length === 0) return "Installed to .claude/:";
+  return `Installed to .claude/ (${copied.length} new, ${skipped.length} already matched):`;
+}
+
+function logCopiedFiles(totals) {
+  console.log(installHeader(totals));
   console.log("  skills/commit/   (4-pass atomic commit skill)");
   console.log("  commands/linear/ (Linear workflow commands)");
   console.log("  hooks/           (commit hook scripts)");
