@@ -43,7 +43,7 @@ function isStrideHook(entry) {
 }
 
 function removeHookConfig() {
-  const settingsPath = join(destRoot, ".claude/settings.json");
+  const settingsPath = join(destRoot, ".claude/settings.local.json");
   if (!existsSync(settingsPath)) return;
 
   const settings = JSON.parse(readFileSync(settingsPath, "utf8"));
@@ -74,7 +74,9 @@ function main() {
   console.log("  .claude/docs/              (principles, patterns, concepts)");
   console.log("  tools/                     (cross-model feedback script)");
   console.log("  .mcp.json.example          (Linear MCP server reference)");
-  console.log("  hooks config               (from .claude/settings.json)");
+  console.log(
+    "  hooks config               (from .claude/settings.local.json)",
+  );
   console.log(
     "\nNote: .mcp.json was not modified — remove Linear servers manually if needed.",
   );

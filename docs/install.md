@@ -4,7 +4,7 @@
 npx github:webventurer/stride
 ```
 
-This copies skills, commands, hooks, and tools into your project's `.claude/` directory and merges hook config into your existing `settings.json`.
+This copies skills, commands, hooks, and tools into your project's `.claude/` directory and merges hook config into your `.claude/settings.local.json` (gitignored, machine-local).
 
 ## Uninstall
 
@@ -12,7 +12,7 @@ This copies skills, commands, hooks, and tools into your project's `.claude/` di
 npx -p github:webventurer/stride stride-uninstall
 ```
 
-This removes all copied directories, the example file, and strips the stride hook from `.claude/settings.json`. Your `.mcp.json` is left untouched — remove Linear servers manually if needed.
+This removes all copied directories, the example file, and strips the stride hook from `.claude/settings.local.json`. Your `.mcp.json` is left untouched — remove Linear servers manually if needed.
 
 ## Requirements
 
@@ -143,7 +143,7 @@ Get your key at [openrouter.ai/keys](https://openrouter.ai/keys).
 └── docs/                    # supporting patterns and concepts
 ```
 
-The install script merges hook config into your existing `.claude/settings.json` — it won't overwrite your other settings.
+The install script merges hook config into `.claude/settings.local.json` (gitignored) — your committed `settings.json` is never modified. Claude Code concatenates hooks from both files, so repo hooks and stride hooks run together.
 
 ## Migration skills
 
@@ -181,10 +181,12 @@ The commit safety hook (`block_bare_git_commit.sh`) is a shell script. If it fai
 
 ### Settings merge strategy
 
-When you already have a `.claude/settings.json`, the install script asks before merging. If you say yes, it uses a deep merge:
+Hook config is written to `.claude/settings.local.json` (gitignored), not `settings.json`. This keeps your committed settings untouched — see [decision 001](decisions/001-hooks-in-settings-local.md) for rationale.
+
+The merge uses a deep strategy on `settings.local.json`:
 
 - **Objects** are merged recursively — your keys are preserved, stride's keys are added alongside
 - **Arrays** (like hook lists) are appended with deduplication — if a hook already exists, it's skipped
 - **Scalar values** — stride's value wins if both sides set the same key
 
-The merge is additive — it never removes your existing settings. But if you have a hook on the same event with different behaviour, both will run. Review `.claude/settings.json` after install if you have existing hooks.
+Claude Code concatenates hook arrays from both `settings.json` and `settings.local.json`, so your repo's committed hooks and stride's installed hooks all run together.

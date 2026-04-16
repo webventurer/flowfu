@@ -34,7 +34,7 @@ The skills aren't independent — each one feeds the next.
 npx github:webventurer/stride
 ```
 
-This copies skills, commands, hooks, and docs into your project. It merges hook config into your existing `.claude/settings.json` (or creates one). Nothing is installed globally.
+This copies skills, commands, hooks, and docs into your project. It merges hook config into `.claude/settings.local.json` (gitignored, machine-local — your committed `settings.json` is never modified). Nothing is installed globally.
 
 ## Quick start
 

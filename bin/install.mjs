@@ -201,7 +201,7 @@ async function configureMcp() {
 }
 
 function mergeSettings() {
-  const settingsPath = join(destRoot, ".claude/settings.json");
+  const settingsPath = join(destRoot, ".claude/settings.local.json");
   mkdirSync(dirname(settingsPath), { recursive: true });
 
   let settings = {};
@@ -230,13 +230,13 @@ async function main() {
   // Configure Linear MCP
   await configureMcp();
 
-  // Merge settings
-  const settingsPath = join(destRoot, ".claude/settings.json");
+  // Merge settings into local (gitignored) settings
+  const settingsPath = join(destRoot, ".claude/settings.local.json");
   const settingsExist = existsSync(settingsPath);
 
   if (settingsExist) {
     const answer = await ask(
-      "\nMerge hook config into existing .claude/settings.json? (y/n) ",
+      "\nMerge hook config into existing .claude/settings.local.json? (y/n) ",
     );
     if (answer !== "y" && answer !== "yes") {
       console.log(
@@ -249,8 +249,8 @@ async function main() {
   mergeSettings();
   console.log(
     settingsExist
-      ? "Merged hooks into .claude/settings.json"
-      : "Created .claude/settings.json with hook config",
+      ? "Merged hooks into .claude/settings.local.json"
+      : "Created .claude/settings.local.json with hook config",
   );
 
   console.log("\nDone. Available skills:");
