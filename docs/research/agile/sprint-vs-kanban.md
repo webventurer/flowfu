@@ -130,7 +130,7 @@ So kanban fits — *but* the story-decomposition discipline and the review-lane 
 ### The torch — what I'm not saying
 
 - **"Kanban pull" is subtly different with agents.** Classic kanban-pull assumes workers choose when to start. Agents usually need to be *dispatched* by the human. Technically it's push-from-human, pull-from-agent-capacity. Doesn't break kanban, but be honest about the mechanics.
-- **We may need new vocabulary eventually.** Sprint-vs-kanban was designed for teams of humans. Solo-human + N-agents sits outside that dichotomy. Kanban is the closest fit *today*, but a third model may emerge as the pattern matures. The signal to watch for: if you find yourself inventing terms that don't map cleanly onto either sprint or kanban, that's *friction is information* — something needs a new name.
+- **We may need new vocabulary eventually.** Sprint-vs-kanban was designed for teams of humans. Solo-human + N-agents sits outside that dichotomy. Kanban is the closest fit *today*, but a third model may emerge as the pattern matures. The signal to watch for: if you find yourself inventing terms that don't map cleanly onto either sprint or kanban, that's *friction is information* — something needs a new name. The first such name has already emerged: the **orchestrator + loop** split (see [Orchestrator and loop](../orchestrator-and-loop)) — neither a sprint mechanism nor a pure kanban one, but the shape that fits when one human orchestrates many agent loops.
 
 ## Why our agile-sourced docs keep saying "sprint"
 

@@ -152,6 +152,8 @@ This is **not** a Scrum sprint. A Scrum sprint is a *time-box across a whole tea
 
 For a worked example of the iteration layer running visibly, see telic-loop projects (e.g. `foo`'s `sprints/sprint-3/.loop/`), where each sprint shipped a story-sized slice over multiple named iterations (`iter 1–5`). Telic's "sprint" ≈ stride's "story"; telic's "iter" ≈ stride's "iteration".
 
+The strategic counterpart to the iteration layer — *who decides what stories to feed the loop in the first place* — is the **orchestrator**. See [Orchestrator and loop](./orchestrator-and-loop) for how the two modes compose into a long-lived-project shape.
+
 ### Shaping the `/linear` commands
 
 Knowing which layer you're at changes what a command should do. `/linear:plan-work` already uses "one issue = one deliverable" as its atomicity rule, and splits when the description contains "and". That's story-shaped thinking. Where the frame unlocks new moves:
