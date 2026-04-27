@@ -1,6 +1,6 @@
 # Epics, stories, and tasks in Linear
 
-> **Status**: Research stage. Three working positions the doc takes: (a) *epic / story / task* is **work-breakdown** vocabulary, not Agile Manifesto material; (b) stride maps it onto Linear via **Milestones inside a project** when an epic crystallises; (c) stride's atomic commit discipline fills the task layer. One [open question](#open-question-non-user-facing-work) about non-user-facing work remains live — that's why this doc lives in `research/`, not `reference/`.
+> **Status**: Research stage. Four working positions the doc takes: (a) *epic / story / task* is **work-breakdown** vocabulary, not Agile Manifesto material; (b) stride maps it onto Linear via **Milestones inside a project** when an epic crystallises; (c) stride's atomic commit discipline fills the task layer; (d) stride adds an **iteration** layer between story and task — one pass of the agent loop toward the story, invisible to the kanban board. One [open question](#open-question-non-user-facing-work) about non-user-facing work remains live — that's why this doc lives in `research/`, not `reference/`.
 
 Stride drives delivery through Linear issues, but Linear's data model — projects, milestones, issues, sub-issues — doesn't prescribe how *big* each unit of work should be. *Epic → user story → task* is a well-worn **work-breakdown hierarchy** for sizing. Bringing it into stride gives the `/linear` commands a shared vocabulary for "is this too big to be one issue?" and "what does a shippable slice look like?"
 
@@ -40,7 +40,10 @@ Looks like:
 
 - **Epic** (big outcome)
   - **User stories** (smaller pieces of value)
-    - **Tasks** (actual work to build it)
+    - **Iterations / loop passes** (each agent run that drives the story toward done — invisible to the board)
+      - **Tasks** (actual work to build it — atomic commits)
+
+The **iteration** layer is stride-specific and exists because of the human + AI agents shape. In a classic team, a story goes from Todo to Doing to Done in one human work-stream. With agents, a story usually takes *multiple loop passes* — plan, implement, review, refine — each one a discrete run. That's an *iteration*. It lives below the story, doesn't surface on the kanban board, and is the unit the agent loops over (not the human).
 
 ### 3. Example: an epic and its user stories
 
@@ -66,7 +69,8 @@ Each of those gets split into tasks (UI, backend, validation, etc.)
 
 - Epic = theme / initiative
 - Story = usable slice of value
-- Task = how it gets built
+- Iteration = one agent loop pass toward the story (stride-specific; not on the board)
+- Task = how it gets built (one atomic commit)
 
 ### 6. Why epics exist
 
@@ -110,6 +114,7 @@ Linear gives us four primitives worth knowing about here — **Project**, **Mile
 | **Product / vision** | Project | `Stride >>>` — the whole-product container |
 | **Epic** (big initiative) | **Milestone** inside the project (preferred); a dedicated Project only at a scale stride isn't at | *None explicit yet.* The `Stride >>>` project acts as one implicit epic |
 | **Story** (slice of value) | Issue | WB-240 — *Stride installer should hash-compare before refusing on conflict* |
+| **Iteration** (one agent loop pass) | *Not surfaced in Linear* — lives in the agent's working state | The plan / implement / review passes the agent runs while driving WB-240 to done |
 | **Task** (unit of work) | Atomic commit, or Sub-issue for bigger breakdowns | The individual commits on the WB-240 branch — one idea each |
 
 ### Three options for the epic layer
@@ -131,6 +136,21 @@ There's no single answer to *"where does an epic live in Linear?"* — it depend
 Stride doesn't lean on Linear's sub-issue feature today; the task layer usually lives in **git history** instead. An issue becomes a feature branch, the branch accumulates atomic commits (each one a task-sized idea), and the PR ships them together as a coherent story. Sub-issues stay available for the rarer case where a story genuinely splits into independently-trackable tasks.
 
 That's a stride-specific choice worth naming: **stride's atomic commit discipline is already doing the work of the "task" layer**. If the Linear view of a story looks like it's missing a layer, that's why — the layer's there, it just lives in the commit log.
+
+### The iteration layer lives in the agent loop
+
+Between *story* and *task* sits a layer that classic Scrum / Jira vocabulary doesn't have a name for: the **iteration** — one pass of the agent's loop toward the story. Plan, implement, review, refine; each pass is one iteration. A small story might ship in a single iteration. A larger one might take five or six.
+
+This layer **doesn't surface on the kanban board**. The story sits in *Doing*; the iterations happen *underneath* it. The human watches the story move through lanes; the agent watches the iterations.
+
+Why call it out at all then? Because once you name it, two things get clearer:
+
+- **What "Doing" actually contains.** A story in *Doing* isn't a single act of work — it's an open-ended loop the agent is currently running. The lane name describes the *story's* state; the *iterations* are the substrate.
+- **Where the loop's discipline applies.** Plan-review cycles, value checklists, exit gates — these belong to the iteration, not the story. Naming the layer gives those mechanisms a home.
+
+This is **not** a Scrum sprint. A Scrum sprint is a *time-box across a whole team*; an iteration here is *one loop pass inside one story for one agent*. They share the word "iterate" and nothing else. The vocabulary borrowed from older agile sources (sprint, iteration, cycle) gets used inconsistently across the industry — stride uses *iteration* for this concept and reserves *sprint* for the Scrum sense (which stride doesn't run; see [Sprint vs kanban](./agile/sprint-vs-kanban)).
+
+For a worked example of the iteration layer running visibly, see telic-loop projects (e.g. `foo`'s `sprints/sprint-3/.loop/`), where each sprint shipped a story-sized slice over multiple named iterations (`iter 1–5`). Telic's "sprint" ≈ stride's "story"; telic's "iter" ≈ stride's "iteration".
 
 ### Shaping the `/linear` commands
 
