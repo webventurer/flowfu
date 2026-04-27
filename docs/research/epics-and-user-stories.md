@@ -2,6 +2,15 @@
 
 > **Status**: Research stage. Four working positions the doc takes: (a) *epic / story / task* is **work-breakdown** vocabulary, not Agile Manifesto material; (b) stride maps it onto Linear via **Milestones inside a project** when an epic crystallises; (c) stride's atomic commit discipline fills the task layer; (d) stride adds an **iteration** layer between story and task — one pass of the agent loop toward the story, invisible to the kanban board. One [open question](#open-question-non-user-facing-work) about non-user-facing work remains live — that's why this doc lives in `research/`, not `reference/`.
 
+## Linear mapping quick reference
+
+| Linear primitive | Hierarchy layer | Stride today |
+|:-----------------|:----------------|:-------------|
+| Project | Product / vision | `Stride >>>` |
+| Milestone | Epic | Create with `/linear:plan-work` |
+| Issue | Story | Create with `/linear:plan-work` |
+| Atomic commit | Task | Created during `/linear:start` |
+
 Stride drives delivery through Linear issues, but Linear's data model — projects, milestones, issues, sub-issues — doesn't prescribe how *big* each unit of work should be. *Epic → user story → task* is a well-worn **work-breakdown hierarchy** for sizing. Bringing it into stride gives the `/linear` commands a shared vocabulary for "is this too big to be one issue?" and "what does a shippable slice look like?"
 
 ## Where the vocabulary actually comes from
