@@ -25,7 +25,7 @@ Fetch the issue via MCP:
 
 - `get_issue` with `$ARGUMENTS`
 
-Extract: issue ID, title, `gitBranchName`, current status.
+Extract: issue ID, title, `gitBranchName`, current status, milestone.
 
 Stop if the issue cannot be found.
 
@@ -110,6 +110,26 @@ Move the issue to **Done** via `save_issue`.
 
 Only set Done status. Skip if already Done. Never set any other status.
 
+### 7b. Check milestone completion
+
+Skip this step if the issue had no milestone.
+
+Otherwise, call `list_issues` filtered by the milestone with non-Done states (`backlog`, `unstarted`, `started`). If any results come back, the milestone has remaining work — skip silently.
+
+If the result is empty, all stories in the milestone are now Done. Prompt:
+
+```
+All stories in *[Milestone name]* are complete — mark the milestone done?
+```
+
+If the user confirms, append a completion note to the milestone description via `save_milestone` (Linear has no milestone "completed" state, so a description note is the durable signal). Format:
+
+```
+Completed: <YYYY-MM-DD> — all stories Done.
+```
+
+If the user declines, leave the milestone untouched.
+
 ### 8. Summary
 
 Display:
@@ -121,6 +141,7 @@ Display:
 - Remote branch: deleted / already gone
 - Worktree: removed / not found
 - Linear status: Done
+- Milestone (if applicable): name + completion status (`complete` if 7b marked it complete, `<n> stories remaining` otherwise)
 
 ---
 
