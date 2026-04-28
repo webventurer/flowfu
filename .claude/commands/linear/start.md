@@ -29,9 +29,11 @@ Fetch the issue and its comments via MCP:
 - `get_issue` with `$ARGUMENTS`
 - `list_comments` with the issue ID
 
-Extract: issue ID, title, description, status, labels, `gitBranchName`, assignee.
+Extract: issue ID, title, description, status, labels, `gitBranchName`, assignee, milestone.
 
 Extract from comments: decisions and context added after the description was written.
+
+If the issue belongs to a milestone, surface it before continuing: `This story is part of *[Milestone name]*`. One line — just enough context that the user knows which epic the work is feeding.
 
 Stop if the issue cannot be found.
 

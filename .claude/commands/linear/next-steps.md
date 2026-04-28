@@ -33,6 +33,7 @@ Use the resolved project name for all Linear API calls in this command.
 | `list_issues` — state: `unstarted`, project: resolved project | Linear MCP |
 | `list_issues` — state: `backlog`, project: resolved project | Linear MCP |
 | `list_issues` — state: `completed`, updatedAt: `-P7D`, project: resolved project | Linear MCP |
+| `list_milestones` — project: resolved project | Linear MCP |
 | `gh pr list --state open --json number,title,headRefName,author,reviewDecision,reviews,url` | Bash |
 
 ### 2. Show current work
@@ -81,7 +82,9 @@ This context should influence recommendations — prefer follow-up issues or rel
 
 Combine `unstarted` and `backlog` issues into a single candidate list. Exclude issues already in `started`. Exclude issues identified as blocked. Sort by priority (Urgent first).
 
-Show as a table:
+If milestones exist for the project, ask: **"Show next steps for a specific epic, or all work?"** If the user picks an epic, filter the candidate list to issues with that milestone. If they pick all work, group the candidate list by milestone (with one group for issues that have no milestone).
+
+Show as a table per milestone (or one combined table when no milestones exist):
 
 | ID | Title | Priority | Labels | Status |
 |:---|:------|:---------|:-------|:-------|
