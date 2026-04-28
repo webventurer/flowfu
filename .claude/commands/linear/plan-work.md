@@ -14,6 +14,7 @@ Accepts a description and optional flags: `/plan-work --research --craft "add er
 
 ## Decision rules
 
+- **Sizing first**: before drafting, determine whether the description is story-sized (one deliverable, ships as one PR) or epic-sized (a named initiative with multiple stories). Epic-sized work becomes a Milestone; story-sized work becomes an Issue linked to a Milestone if one exists.
 - One issue = one deliverable. If the description contains "and" connecting unrelated outcomes, split.
 - Default to the smallest issue that moves something forward. If the user's description is broad, propose a focused first issue plus follow-ups.
 - Titles are imperative and start with a verb (Add, Fix, Replace, Remove…). Avoid "Investigate" unless the outcome genuinely is a report, not a code change.
@@ -38,6 +39,24 @@ Use the resolved project name for all Linear API calls in this command.
 ### 1. Parse arguments
 
 Extract the description and flags from `$ARGUMENTS`. Determine if `--research` and/or `--craft` are present.
+
+### 1b. Sizing gate
+
+Ask the user: **"Is this story-sized (one deliverable, ships as one PR) or epic-sized (a named initiative with multiple stories)?"**
+
+**If story-sized** — continue to step 2 as normal. At step 9 (create issue), also call `list_milestones` for the project: if any milestones exist, ask "Link this story to an existing epic?" and if yes, set the `milestone` field on `save_issue`.
+
+**If epic-sized** — follow the epic path:
+
+1. Call `list_milestones` for the project and show any existing milestones
+2. Ask: "Create a new epic (milestone), or link the stories to an existing one?"
+3. If creating: ask for a name and one-line description, then call `save_milestone` with `name`, `description`, and `project`
+4. Confirm the milestone with the user before proceeding
+5. Ask: "What are the first 1–3 stories for this epic?" — each answer becomes a separate issue draft
+6. For each story: run the full flow from step 2 onwards (duplicate check, CRAFT if requested, draft, approval, create) with `milestone` set to the new or chosen milestone
+7. After all stories are created, summarise: list the milestone and all created issues
+
+<mark>**Do not bundle all stories into one issue.** Each story is its own issue linked to the milestone.</mark>
 
 ### 2. Duplicate check (all modes)
 
