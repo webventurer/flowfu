@@ -18,6 +18,7 @@ Accepts a description and optional flags: `/plan-work --research --craft "add er
 - One issue = one deliverable. If the description contains "and" connecting unrelated outcomes, split.
 - Default to the smallest issue that moves something forward. If the user's description is broad, propose a focused first issue plus follow-ups.
 - Titles are imperative and start with a verb (Add, Fix, Replace, Remove…). Avoid "Investigate" unless the outcome genuinely is a report, not a code change.
+- Titles describe the outcome a stakeholder would recognise — what changes from their perspective — not the implementation. *"Background jobs run reliably after the first one"*, not *"Reset Tortoise globals between RQ jobs"*. Infrastructure exception: when there's no user-visible outcome, name the *system behaviour* that changes (e.g. "Linter accepts 100-char lines"), not the file that changes. See `docs/reference/issue-template.md` for the canonical rule and examples.
 - Never assign the issue unless the user explicitly asks.
 - Labels are optional — suggest at most 3, only when clearly relevant. Prefer no labels over speculative ones.
 - Priority defaults to Medium. Only upgrade if the user says it's urgent or the description implies user-facing impact (breakage, a time-sensitive launch, etc.).
