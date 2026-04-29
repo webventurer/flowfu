@@ -1,6 +1,6 @@
 # Epics and stories
 
-Stride breaks work into four layers — **epic, story, iteration, task** — and maps them onto Linear's primitives. This page is the reference for what each layer is, where it lives, and how the `/linear` commands use them.
+Stride breaks work into three layers — **epic, story, task** — and maps them onto Linear's primitives. This page is the reference for what each layer is, where it lives, and how the `/linear` commands use them.
 
 For the *why* behind the choices (vocabulary origins, the trade-off between three possible epic mappings, the live question on non-user-facing work), see the [research doc](/research/epics-and-user-stories).
 
@@ -11,7 +11,6 @@ For the *why* behind the choices (vocabulary origins, the trade-off between thre
 | **Product** | Project | `Stride >>>` — the whole-product container |
 | **Epic** (named initiative) | **Milestone** inside the project | Created by `/linear:plan-work` when the description is epic-sized |
 | **Story** (slice of value) | Issue, optionally linked to a milestone | Created by `/linear:plan-work`; ships as one PR |
-| **Iteration** (one agent loop pass) | *Not surfaced in Linear* | Lives in the agent's working state during `/linear:start` |
 | **Task** (unit of work) | Atomic commit | Created during `/linear:start` as the branch accumulates commits |
 
 ## What each layer is
@@ -19,10 +18,6 @@ For the *why* behind the choices (vocabulary origins, the trade-off between thre
 **Epic.** A named initiative made of multiple stories. Too big to ship as one PR. Has a stakeholder-recognisable name like a feature or theme. Lives as a Milestone inside the project.
 
 **Story.** One deliverable. Ships as one PR. Reverts cleanly. Belongs to a milestone if one exists; otherwise sits directly in the project.
-
-**Iteration.** One pass of the agent's loop toward a story — plan, implement, review, refine. Stride-specific: doesn't surface on the kanban board, and isn't a Linear primitive. The story sits in *Doing*; the iterations happen underneath. A small story might ship in a single iteration; a larger one might take five or six.
-
-*Not a Scrum sprint.* A sprint is a time-box across a whole team; an iteration here is one loop pass inside one story for one agent. They share the word *iterate* and nothing else.
 
 **Task.** One atomic commit. Stride's task layer lives in git history, not Linear's sub-issue feature. Each commit is one task-sized idea, and the PR ships them together as a coherent story.
 
