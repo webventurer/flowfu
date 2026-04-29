@@ -140,6 +140,19 @@ There's no single answer to *"where does an epic live in Linear?"* — it depend
 
 **Milestones and flow stay orthogonal.** A Milestone groups issues on the decomposition axis — it doesn't move them through kanban states. Each issue inside a milestone still flows Backburner → Done on its own. That's what keeps the two axes clean: a Milestone is *where an issue belongs* by decomposition, not *where it is* by flow.
 
+### Plan a few, ship, replan
+
+Once you commit to a Milestone, the next question is how many child stories to create up front. The answer is **the first 1–3** — and only those — before shipping anything. After the first story lands, the next 1–3 will be informed by what you learned.
+
+| Why plan 1–3 (agile) | What planning all of them at once (waterfall) costs |
+|:---------------------|:----------------------------------------------------|
+| You only know enough to plan a few stories well — beyond that you're guessing | Locks in design decisions before requirements force them |
+| Each shipped story changes the context — story 4 might look different after 1–3 land | The backlog goes stale before you reach it |
+| 1–3 fits in working memory; the user can review them as a coherent set | Bulk creation bypasses real review and bloats the board |
+| Leaves the milestone open to *act, then adjust* — feedback from a shipped story shapes the next plan | Pretends the future is knowable; closes doors before you need to |
+
+`/linear:plan-work` enforces this by asking only for "the first 1–3 stories" when the epic path fires. When those land, run `/linear:next-steps` against the milestone and plan the next 1–3 — same loop, fresh context.
+
 ### The task layer lives in commits
 
 Stride doesn't lean on Linear's sub-issue feature today; the task layer usually lives in **git history** instead. An issue becomes a feature branch, the branch accumulates atomic commits (each one a task-sized idea), and the PR ships them together as a coherent story. Sub-issues stay available for the rarer case where a story genuinely splits into independently-trackable tasks.
